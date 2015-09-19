@@ -16,6 +16,8 @@ import { vkUrlPrompt, vkSearchPrompt } from './prompts/vk-prompts';
 import loadVkAudio, { formatTrackFull } from './menu/vk-audio';
 import storage from './storage';
 
+import Promise from 'bluebird';
+
 var token = {
   name: 'token',
   type: 'input',
@@ -126,23 +128,49 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     searchFn();
   });
 
+  let addToProfile = (selected, listEl) => {
+    let spinner = LoadingSpinner(screen, 'Adding...');
+    return vk.method('audio.add', { audio_id: selected.aid , owner_id: selected.owner_id }).then((result) => {
+      spinner.stop();
+      selected.isAdded = true;
+
+      rightPane.setItem(listEl, formatTrackFull(selected));
+      rightPane.focus();
+
+      InfoBox(screen, 'Successfully added to your profile');
+      return true;
+    });
+  }
+
   screen.key(['x'], function(ch, key) {
     let selected = playlist.get(rightPane.selected);
     let listEl = rightPane.items[rightPane.selected];
 
     if (!selected.isAdded) {
-      let spinner = LoadingSpinner(screen, 'Adding...');
-      vk.method('audio.add', { audio_id: selected.aid , owner_id: selected.owner_id }).then((result) => {
-        spinner.stop();
-        selected.isAdded = true;
-
-        rightPane.setItem(listEl, formatTrackFull(selected));
-        rightPane.focus();
-
-        InfoBox(screen, 'Successfully added to your profile');
-      });
+      addToProfile(selected, listEl);
     } else {
-      InfoBox(screen, 'Already added');
+      InfoBox(screen, 'Already added. Press s to move on top of profile list');
     }
+  });
+
+  screen.key(['s'], function(ch, key) {
+    let selected = playlist.get(rightPane.selected);
+    let listEl = rightPane.items[rightPane.selected];
+
+    (selected.isAdded ? Promise.resolve(true) : addToProfile(selected, listEl)).then(() => {
+
+      let spinner = LoadingSpinner(screen, 'Moving...');
+
+      return vk.method('audio.get', { need_user: 1, count: 1 }).then((result) => {
+        let currentTopTrack = result.items[0];
+        return vk.method('audio.reorder', { audio_id: selected.aid, before: currentTopTrack.aid });
+      }).then((result) => {
+        spinner.stop();
+      }).catch((err) => {
+        Logger.error(err);
+        spinner.stop();
+      });
+
+    });
   });
 });
