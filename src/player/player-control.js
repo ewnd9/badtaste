@@ -8,14 +8,14 @@ let createProcess = (url) => {
   ls.stdin.write(url);
 
   ls.stdout.on('data', function (data) {
-    Logger.info('stdout: ' + data);
+    // Logger.info('stdout: ' + data);
   });
 
   ls.stderr.on('data', function (data) {
     if (data.toString().trim() === 'No next song was found') {
       onNextSong();
     } else {
-      Logger.error('error', data);
+      // Logger.error('error', data);
     }
   });
 
