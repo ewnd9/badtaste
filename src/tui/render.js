@@ -8,6 +8,9 @@ export default () => {
   let screen = blessed.screen({
     smartCSR: true
   });
+  screen.key(['escape', 'q', 'C-c'], function(ch, key) {
+    return process.exit(0);
+  });
 
   let leftPane = new LeftPane(screen);
   let rightPane = new RightPane(screen);
