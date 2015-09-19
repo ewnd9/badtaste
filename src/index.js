@@ -9,6 +9,7 @@ import tui from './tui/render';
 
 import LoadingSpinner from './tui/loading-spinner';
 import InfoBox from './tui/info-box';
+import TracklistPrompt from './tui/tracklist-prompt';
 
 import { vkUrlPrompt, vkSearchPrompt } from './prompts/vk-prompts';
 
@@ -36,7 +37,12 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
 
   rightPane.on('select', function(item, index) {
     playlist.setCurrent(index);
-    player.play(playlist.getCurrent());
+
+    if (playlist.getCurrentItem().notAvailable) {
+      rightPane.down(1);
+    } else {
+      player.play(playlist.getCurrent());
+    }
   });
 
   let searchFn = () => vkSearchPrompt(screen, (query) => loadVkAudio({ type: 'search', query: query }, rightPane));
@@ -53,6 +59,13 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     {
       name: '{bold}VK{/bold} Add group',
       fn: () => vkUrlPrompt(screen, (id) => loadVkAudio({ type: 'group', id: id }, rightPane))
+    },
+    {
+      name: '{bold}VK{/bold} Add playlist',
+      fn: () => TracklistPrompt(screen).then((text) => {
+        rightPane.focus();
+        loadVkAudio({ type: 'tracklist', tracklist: text }, rightPane, screen);
+      })
     },
   ];
 
