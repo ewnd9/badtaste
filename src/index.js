@@ -35,6 +35,8 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     player.play(playlist.getCurrent());
   });
 
+  let searchFn = () => vkSearchPrompt(screen, (query) => loadVkAudio({ type: 'search', query: query }, rightPane));
+
   let leftMenu = [
     {
       name: '{bold}VK{/bold} Profile',
@@ -42,7 +44,7 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     },
     {
       name: '{bold}VK{/bold} Search',
-      fn: () => vkSearchPrompt(screen, (query) => loadVkAudio({ type: 'search', query: query }, rightPane))
+      fn: searchFn
     },
     {
       name: '{bold}VK{/bold} Add group',
@@ -70,5 +72,13 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     }
 
     isPlaying = !isPlaying;
+  });
+
+  screen.key(['C-f'], function(ch, key) {
+    leftPane.select(1); // @TODO: wow
+    leftPane.focus();
+    rightPane.focus();
+
+    searchFn();
   });
 });

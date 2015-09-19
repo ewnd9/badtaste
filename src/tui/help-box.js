@@ -17,8 +17,9 @@ export default (screen) => {
   });
 
   var lines = [];
-  var addHotkey = (key, description) => lines.push(_.padRight(key, 7) + description);
+  var addHotkey = (key, description) => lines.push(_.padRight(key, 8) + description);
 
+  addHotkey('ctrl-f', 'search');
   addHotkey('space', 'play/stop');
   addHotkey('m', 'switch panes');
   addHotkey('q', 'exit');

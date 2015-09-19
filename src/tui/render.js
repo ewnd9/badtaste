@@ -6,7 +6,8 @@ import HelpBox from './help-box';
 
 export default () => {
   let screen = blessed.screen({
-    smartCSR: true
+    smartCSR: true,
+    debug: true
   });
   screen.key(['escape', 'q', 'C-c'], function(ch, key) {
     return process.exit(0);
