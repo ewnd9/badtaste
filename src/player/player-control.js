@@ -1,6 +1,6 @@
 var spawn = require('child_process').spawn;
 var i = 0;
-var onNextSong = () => console.log('no next song');
+var onNextSong = () => Logger.info('no next song');
 
 let createProcess = (url) => {
   var ls = spawn('node', [__dirname + '/player.js']);
@@ -8,14 +8,14 @@ let createProcess = (url) => {
   ls.stdin.write(url);
 
   ls.stdout.on('data', function (data) {
-    console.log('stdout: ' + data);
+    Logger.info('stdout: ' + data);
   });
 
   ls.stderr.on('data', function (data) {
     if (data.toString().trim() === 'No next song was found') {
       onNextSong();
     } else {
-      console.log('error', data);
+      Logger.error('error', data);
     }
   });
 

@@ -21,6 +21,6 @@ export default (screen, cb) => {
     return vk.method('utils.resolveScreenName', { screen_name: alias }).then((apiResponse) => {
       var id = (apiResponse.type === 'group' ? '-' : '') + apiResponse.object_id;
       cb(id);
-    }).catch(console.log.bind(console));
+    }).catch(Logger.error.bind(Logger));
   });
 };

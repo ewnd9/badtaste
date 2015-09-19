@@ -101,6 +101,6 @@ export default (params, rightPane, screen) => {
 
       rightPane.setItems(titles);
       rightPane.focus();
-    }).catch(console.log.bind(console));
+    }).catch(Logger.error.bind(Logger));
   }
 };
