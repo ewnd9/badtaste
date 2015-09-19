@@ -6,7 +6,7 @@ export default (parent) => {
     ...style,
     left: '30%',
     width: '70%',
-    items: ['Hello {bold}world{/bold}!']
+    items: ['{bold}Loading{/bold}, please wait']
   });
 
   parent.append(box);

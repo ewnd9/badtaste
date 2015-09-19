@@ -2,8 +2,8 @@ import * as vk from 'vk-universal-api';
 import inquirerCredentials from 'inquirer-credentials';
 
 import playlist from './playlist';
-import * as player from './player-control';
-import { screen, rightPane } from './blessed-gui/render';
+import * as player from './player/player-control';
+import tui from './tui/render';
 
 var token = {
   name: 'token',
@@ -24,6 +24,7 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
 });
 
 let init = (data) => {
+  let { screen, rightPane } = tui();
   let urls = data.map((obj) => obj.url);
 
   let isAdded = true;
