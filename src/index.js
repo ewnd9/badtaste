@@ -146,17 +146,6 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     let selected = playlist.get(rightPane.selected);
     let listEl = rightPane.items[rightPane.selected];
 
-    if (!selected.isAdded) {
-      addToProfile(selected, listEl);
-    } else {
-      InfoBox(screen, 'Already added. Press s to move on top of profile list');
-    }
-  });
-
-  screen.key(['s'], function(ch, key) {
-    let selected = playlist.get(rightPane.selected);
-    let listEl = rightPane.items[rightPane.selected];
-
     (selected.isAdded ? Promise.resolve(true) : addToProfile(selected, listEl)).then(() => {
 
       let spinner = LoadingSpinner(screen, 'Moving...');
