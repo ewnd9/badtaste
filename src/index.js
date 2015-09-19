@@ -6,9 +6,13 @@ import playlist from './playlist';
 import * as player from './player/player-control';
 
 import tui from './tui/render';
+
+import LoadingSpinner from './tui/loading-spinner';
+import InfoBox from './tui/info-box';
+
 import { vkUrlPrompt, vkSearchPrompt } from './prompts/vk-prompts';
 
-import loadVkAudio from './menu/vk-audio';
+import loadVkAudio, { formatTrackFull } from './menu/vk-audio';
 
 var token = {
   name: 'token',
@@ -40,7 +44,7 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
   let leftMenu = [
     {
       name: '{bold}VK{/bold} Profile',
-      fn: () => loadVkAudio({ type: 'user' }, rightPane)
+      fn: () => loadVkAudio({ type: 'profile' }, rightPane)
     },
     {
       name: '{bold}VK{/bold} Search',
@@ -80,5 +84,25 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     rightPane.focus();
 
     searchFn();
+  });
+
+  screen.key(['x'], function(ch, key) {
+    let selected = playlist.get(rightPane.selected);
+    let listEl = rightPane.items[rightPane.selected];
+
+    if (!selected.isAdded) {
+      let spinner = LoadingSpinner(screen, 'Adding...');
+      vk.method('audio.add', { audio_id: selected.aid , owner_id: selected.owner_id }).then((result) => {
+        spinner.stop();
+        selected.isAdded = true;
+
+        rightPane.setItem(listEl, formatTrackFull(selected));
+        rightPane.focus();
+
+        InfoBox(screen, 'Successfully added to your profile');
+      });
+    } else {
+      InfoBox(screen, 'Already added');
+    }
   });
 });

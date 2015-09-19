@@ -21,6 +21,7 @@ export default (screen) => {
 
   addHotkey('ctrl-f', 'search');
   addHotkey('space', 'play/stop');
+  addHotkey('x', 'add focused track to profile audio');
   addHotkey('m', 'switch panes');
   addHotkey('q', 'exit');
   lines.push('\nPress any key to hide help box');
