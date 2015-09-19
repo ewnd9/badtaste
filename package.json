@@ -1,0 +1,29 @@
+{
+  "name": "badtaste",
+  "version": "0.0.1",
+  "description": "Play audio from vk.com in your terminal",
+  "main": "cli.js",
+  "bin": {
+    "badtaste": "cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "preferGlobal": "true",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ewnd9/badtaste.git"
+  },
+  "keywords": [
+    "vk", "vk.com", "audio", "cli", "player"
+  ],
+  "author": "ewnd9 <ewndnine@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^5.8.23",
+    "blessed": "^0.1.80",
+    "exit-hook": "^1.1.1",
+    "player": "^0.5.0"
+  }
+}
