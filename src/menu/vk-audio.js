@@ -29,13 +29,21 @@ export default (params, rightPane, screen) => {
     rightPane.setItems([]);
     playlist.setPlaylist([]);
 
-    let spinner = LoadingSpinner(screen, 'Adding...');
+    let spinner = LoadingSpinner(screen, 'Adding...', false);
 
     var tracklist = splitTracklist(params.tracklist);
-    Promise.reduce(tracklist, (total, current) => {
-      return Promise.delay(300).then(() => vk.method('audio.search', { need_user: 1, q: current.track }))
-                               .then((response) => {
+    Promise.reduce(tracklist, (total, current, index) => {
+      let delay = Promise.delay(300);
+      let apiSearch = () => vk.method('audio.search', { need_user: 1, q: current.track });
+
+      return delay.then(apiSearch).then((response) => {
         var track = response.items[0];
+        return track;
+      }, (err) => {
+        Logger.error(err);
+        return undefined;
+      }).then((track) => {
+        spinner.setContent(`${index  + 1} / ${tracklist.length}. press z to cancel`);
 
         if (!track) {
           track = {
@@ -55,10 +63,15 @@ export default (params, rightPane, screen) => {
 
         return total;
       });
-    }, {}).then(() => spinner.stop())
-          .catch(console.log.bind(console));
+    }, {}).then(() => {
+      spinner.stop();
+    }).catch((err) => {
+      spinner.stop();
+      Logger.error(err);
+    });
   } else {
     let load = null;
+
     if (params.type === 'profile' || params.type === 'group') {
       load = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count, owner_id: params.id });
 

@@ -1,6 +1,6 @@
 import blessed from 'blessed';
 
-export default (screen, message) => {
+export default (screen, message, lockKeys = true) => {
   var loader = blessed.loading({
     parent: screen,
     border: 'line',
@@ -16,9 +16,15 @@ export default (screen, message) => {
   });
 
   loader.load(message);
+
+  screen.lockKeys = lockKeys;
+  screen.key(['z'], (ch, key) => loader.stop());
+
+  var superStop = loader.stop;
+  loader.stop = () => {
+    superStop.call(loader);
+    screen.removeKey(['z'], (ch, key) => loader.stop());
+  };
+
   return loader;
-  // setTimeout(function() {
-  //   loader.stop();
-  //   screen.destroy();
-  // }, 3000);
 };

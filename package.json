@@ -33,6 +33,7 @@
     "lodash": "^3.10.1",
     "player": "^0.5.0",
     "split-tracklist": "^1.1.1",
-    "vk-universal-api": "0.0.2"
+    "vk-universal-api": "0.0.2",
+    "winston": "^1.0.1"
   }
 }
