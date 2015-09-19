@@ -4,7 +4,10 @@ import _ from 'lodash';
 
 import playlist from './playlist';
 import * as player from './player/player-control';
+
 import tui from './tui/render';
+import vkPrompt from './tui/vk-prompt';
+
 import loadVkAudio from './menu/vk-audio';
 
 var token = {
@@ -34,21 +37,13 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
 
   let leftMenu = [
     {
-      name: '{bold}VK{/bold} profile',
+      name: '{bold}VK{/bold} Profile',
       fn: () => loadVkAudio({ type: 'user' }, rightPane)
     },
     {
-      name: '{bold}VK{/bold} noisia',
-      fn: () => loadVkAudio({ type: 'group', id: '-26942782' }, rightPane)
+      name: '{bold}VK{/bold} Add group',
+      fn: () => vkPrompt(screen, (id) => loadVkAudio({ type: 'group', id: id }, rightPane))
     },
-    {
-      name: '{bold}VK{/bold} boards of canada',
-      fn: () => loadVkAudio({ type: 'group', id: '-173328' }, rightPane)
-    },
-    {
-      name: 'Add more...',
-      fn: () => console.log('hi')
-    }
   ];
 
   let selectLeftPane = (item, index) => {
