@@ -3,11 +3,19 @@ import * as vk from 'vk-universal-api';
 import playlist from './../playlist';
 import * as player from './../player/player-control';
 
-export default (type, rightPane) => {
+export default (params, rightPane) => {
   let count = 1000;
   let offset = 0;
 
-  vk.method('audio.get', { need_user: 1, count: count, offset: offset * count, owner_id: type.id }).then((result) => {
+  let load = null;
+
+  if (params.type === 'user' || params.type === 'group') {
+    load = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count, owner_id: params.id })
+  } else if (params.type === 'search') {
+    load = vk.method('audio.search', { need_user: 1, count: count, offset: offset * count, q: params.query })
+  }
+
+  load.then((result) => {
     let data = result.items;
     let urls = data.map((obj) => obj.url);
 

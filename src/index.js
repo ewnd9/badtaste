@@ -6,7 +6,7 @@ import playlist from './playlist';
 import * as player from './player/player-control';
 
 import tui from './tui/render';
-import vkPrompt from './tui/vk-prompt';
+import { vkUrlPrompt, vkSearchPrompt } from './prompts/vk-prompts';
 
 import loadVkAudio from './menu/vk-audio';
 
@@ -41,8 +41,12 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
       fn: () => loadVkAudio({ type: 'user' }, rightPane)
     },
     {
+      name: '{bold}VK{/bold} Search',
+      fn: () => vkSearchPrompt(screen, (query) => loadVkAudio({ type: 'search', query: query }, rightPane))
+    },
+    {
       name: '{bold}VK{/bold} Add group',
-      fn: () => vkPrompt(screen, (id) => loadVkAudio({ type: 'group', id: id }, rightPane))
+      fn: () => vkUrlPrompt(screen, (id) => loadVkAudio({ type: 'group', id: id }, rightPane))
     },
   ];
 
