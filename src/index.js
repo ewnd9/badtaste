@@ -14,6 +14,7 @@ import TracklistPrompt from './tui/tracklist-prompt';
 import { vkUrlPrompt, vkSearchPrompt } from './prompts/vk-prompts';
 
 import loadVkAudio, { formatTrackFull } from './menu/vk-audio';
+import storage from './storage';
 
 var token = {
   name: 'token',
@@ -45,36 +46,62 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
     }
   });
 
-  let searchFn = () => vkSearchPrompt(screen, (query) => loadVkAudio({ type: 'search', query: query }, rightPane));
+  let searchFn = () => vkSearchPrompt(screen).then((query) => loadVkAudio({ type: 'search', query: query }, rightPane));
 
-  let leftMenu = [
-    {
-      name: '{bold}VK{/bold} Profile',
-      fn: () => loadVkAudio({ type: 'profile' }, rightPane)
-    },
-    {
-      name: '{bold}VK{/bold} Search',
-      fn: searchFn
-    },
-    {
-      name: '{bold}VK{/bold} Add group',
-      fn: () => vkUrlPrompt(screen, (id) => loadVkAudio({ type: 'group', id: id }, rightPane))
-    },
-    {
-      name: '{bold}VK{/bold} Add playlist',
-      fn: () => TracklistPrompt(screen).then((text) => {
-        rightPane.focus();
-        loadVkAudio({ type: 'tracklist', tracklist: text }, rightPane, screen);
-      })
-    },
-  ];
+  let leftMenu = [];
+
+  let renderLeftPane = () => {
+    let leftMenuRaw = [
+      {
+        name: '{bold}VK{/bold} Profile',
+        fn: () => loadVkAudio({ type: 'profile' }, rightPane)
+      },
+      {
+        name: '{bold}VK{/bold} Search',
+        fn: searchFn
+      },
+      storage.data.groups.map((group) => {
+        return {
+          name: `{bold}VK{/bold} Custom: ${group.name}`,
+          fn: () => loadVkAudio({ type: 'group', id: group.id }, rightPane)
+        }
+      }),
+      {
+        name: '{bold}VK{/bold} Add group',
+        fn: () => vkUrlPrompt(screen).then((data) => {
+          let { id, name } = data;
+
+          storage.data.groups.push({
+            id: id,
+            name: name
+          });
+          storage.save();
+
+          renderLeftPane();
+          leftPane.focus();
+
+          loadVkAudio({ type: 'group', id: id }, rightPane);
+        })
+      },
+      {
+        name: '{bold}VK{/bold} Add playlist',
+        fn: () => TracklistPrompt(screen).then((text) => {
+          rightPane.focus();
+          loadVkAudio({ type: 'tracklist', tracklist: text }, rightPane, screen);
+        })
+      },
+    ];
+
+    leftMenu = _.flatten(leftMenuRaw);
+    leftPane.setItems(_.pluck(leftMenu, 'name'));
+  };
 
   let selectLeftPane = (item, index) => {
     leftMenu[index].fn();
   };
 
-  leftPane.setItems(_.pluck(leftMenu, 'name'));
   leftPane.on('select', selectLeftPane);
+  renderLeftPane();
   selectLeftPane(null, 0);
 
   screen.title = 'badtaste';

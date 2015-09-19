@@ -1,5 +1,6 @@
 import blessed from 'blessed';
 import _ from 'lodash';
+import storage from './../storage';
 
 export default (screen) => {
   var msg = blessed.message({
@@ -24,7 +25,10 @@ export default (screen) => {
   addHotkey('x', 'add focused track to profile audio');
   addHotkey('m', 'switch panes');
   addHotkey('q', 'exit');
-  lines.push('\nPress any key to hide help box');
+  
+  lines.push('\n');
+  lines.push('Storage file ' + storage.path);
+  lines.push('Press any key to hide help box');
 
   msg.display(lines.join('\n'), 0, function(err) {
 
