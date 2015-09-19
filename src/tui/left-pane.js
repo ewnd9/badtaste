@@ -6,7 +6,7 @@ export default (parent) => {
     ...style,
     left: 0,
     width: '30%',
-    items: ['{bold}VK{/bold} audio', 'Add more...']
+    items: ['Loading']
   });
 
   parent.append(box);

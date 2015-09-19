@@ -24,7 +24,7 @@ inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credenti
 });
 
 let init = (data) => {
-  let { screen, rightPane } = tui();
+  let { screen, leftPane, rightPane } = tui();
   let urls = data.map((obj) => obj.url);
 
   let isAdded = true;
@@ -39,7 +39,6 @@ let init = (data) => {
   });
 
   playlist.setPlaylist(data);
-
 
   player.play(playlist.getCurrent());
   player.setOnNextSong(() => {
@@ -56,11 +55,29 @@ let init = (data) => {
     player.play(playlist.getCurrent());
   });
 
+  let vkUserPageMenu = '{bold}VK{/bold} audio';
+  let addMoreMenu = 'Add more...';
+
+  leftPane.setItems([vkUserPageMenu, addMoreMenu]);
+  leftPane.on('select', (item, index) => {
+    console.log(item);
+  });
+
+  screen.title = 'badtaste';
   screen.render();
+
   screen.key(['escape', 'q', 'C-c'], function(ch, key) {
     return process.exit(0);
   });
-  screen.key(['w'], function(ch, key) {
-    player.stop();
+
+  var isPlaying = true;
+  screen.key(['space'], function(ch, key) {
+    if (isPlaying) {
+      player.stop();
+    } else {
+      player.play(playlist.getCurrent());
+    }
+
+    isPlaying = !isPlaying;
   });
 };
