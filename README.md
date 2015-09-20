@@ -14,7 +14,7 @@ $ npm install -g badtaste
 ## Usage
 
 ```
-$ badtaste
+$ badtaste # press '?' inside to get help
 ```
 
 ## Similar
