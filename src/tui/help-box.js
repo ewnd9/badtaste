@@ -22,7 +22,7 @@ export default (screen) => {
 
   addHotkey('ctrl-f', 'search');
   addHotkey('space', 'play/stop');
-  addHotkey('x', 'add focused track to profile audio');
+  addHotkey('x', 'add track to profile audio');
   addHotkey('m', 'switch panes');
   addHotkey('q', 'exit');
 

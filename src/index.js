@@ -18,4 +18,6 @@ setupCredentials().then(() => {
 
   screen.title = 'badtaste';
   screen.render();
+
+  process.title = 'badtaste';
 });

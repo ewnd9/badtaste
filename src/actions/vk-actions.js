@@ -2,6 +2,7 @@ import * as vk from 'vk-universal-api';
 
 import splitTracklist from 'split-tracklist';
 import Promise from 'bluebird';
+import _ from 'lodash';
 
 let count = 1000;
 let offset = 0;
@@ -10,6 +11,8 @@ let profileAudious = {};
 
 let formatTrack = (track) => {
   let result = `{bold}${track.artist}{/bold} - ${track.title}`.replace(/&amp;/g, '&');
+  let duration = _.padLeft(track.duration / 60 | 0, 2, '0') + ':' + _.padLeft(track.duration % 60, 2, '0');
+  result += ` {|}${duration}`;
 
   if (track.notAvailable) {
     result = `Not Found: ${result}`;
