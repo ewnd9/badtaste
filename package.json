@@ -1,6 +1,6 @@
 {
   "name": "badtaste",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Play audio from vk.com in your terminal",
   "main": "cli.js",
   "bin": {
