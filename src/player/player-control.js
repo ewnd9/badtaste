@@ -20,7 +20,7 @@ let createProcess = (url) => {
   });
 
   ls.on('close', function (code) {
-    // console.log('child process exited with code ' + code + ' ' + i++);
+    // Logger.error('child process exited with code ' + code + ' ' + i++);
   });
 
   return ls;
