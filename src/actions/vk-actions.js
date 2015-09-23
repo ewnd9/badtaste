@@ -24,10 +24,7 @@ let formatTrack = (track) => {
 export let formatTrackFull = (track) => (track.isAdded ? ' + ' : ' - ') + formatTrack(track);
 
 let handleData = (result) => {
-  let data = result.items;
-  let urls = data.map((obj) => obj.url);
-
-  let titles = data.map(obj => {
+  return result.items.map(obj => {
     obj.trackTitle = formatTrack(obj);
 
     obj.isAdded = typeof profileAudious[obj.trackTitle] !== 'undefined';
@@ -35,9 +32,7 @@ let handleData = (result) => {
 
     return obj;
   });
-
-  return titles;
-}
+};
 
 export let getProfileAudio = () => {
   let request = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count });
@@ -107,4 +102,4 @@ export let addOnTop = (selected) => {
     let currentTopTrack = result.items[0];
     return vk.method('audio.reorder', { audio_id: selected.aid, before: currentTopTrack.aid });
   });
-}
+};

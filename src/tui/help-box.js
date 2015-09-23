@@ -31,6 +31,6 @@ export default (screen) => {
   lines.push('Press any key to hide help box');
 
   msg.display(lines.join('\n'), 0, function(err) {
-
+    Logger.error(err);
   });
 };

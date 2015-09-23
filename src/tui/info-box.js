@@ -16,6 +16,6 @@ export default (screen, message) => {
   });
 
   msg.display(message, 1, function(err) {
-
+    Logger.error(err);
   });
 };

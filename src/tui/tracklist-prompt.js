@@ -11,12 +11,12 @@ export default (screen) => {
     tags: true,
     border: {
       type: 'line'
-    },
+    }
   });
 
   var box = blessed.textarea({
     style: {
-      bg: 'black',
+      bg: 'black'
     },
     height: '100%-5'
   });

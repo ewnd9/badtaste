@@ -1,0 +1,23 @@
+{
+  "useGlobalEslint": false,
+  "ecmaFeatures": {
+    "modules": true,
+    "experimentalObjectRestSpread": true
+  },
+  "rules": {
+    "indent": [0, "tab"],
+    "quotes": [2, "single"],
+    "linebreak-style": [2, "unix"],
+    "semi": [2, "always"],
+    "no-unused-vars": [2, {"vars": "all", "args": "none"}]
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "extends": "eslint:recommended",
+  "globals": {
+    "Logger": true
+  }
+}

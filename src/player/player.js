@@ -7,7 +7,7 @@ process.stdin.on('data', function(chunk) {
   player.add(url);
   player.play();
 
-  player.on('playend',function(item) {
+  player.on('playend',function(data) {
     process.exit(0);
   });
 

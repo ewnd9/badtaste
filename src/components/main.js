@@ -1,7 +1,5 @@
-import storage, { OPEN_VK, PLAY, SHOW_HELP, SWITCH_PANE } from './../storage';
+import storage, { PLAY, SHOW_HELP, SWITCH_PANE } from './../storage';
 
-import LoadingSpinner from './../tui/loading-spinner';
-import InfoBox from './../tui/info-box';
 import HelpBox from './../tui/help-box';
 
 import LeftPane from './../tui/left-pane';
@@ -15,6 +13,7 @@ let leftPane = null;
 let rightPane = null;
 
 import * as player from './../player/player-control';
+import playlist from './../playlist';
 
 export default (_screen) => {
   screen = _screen;
@@ -22,8 +21,8 @@ export default (_screen) => {
   leftPane = new LeftPane(screen);
   rightPane = new RightPane(screen);
 
-  let leftMenu = LeftMenu(screen, leftPane);
-  let rightMenu = RightMenu(screen, rightPane);
+  LeftMenu(screen, leftPane);
+  RightMenu(screen, rightPane);
 
   rightPane.focus();
   screen.render();

@@ -1,5 +1,4 @@
 var spawn = require('child_process').spawn;
-var i = 0;
 var onNextSong = () => Logger.info('no next song');
 
 let createProcess = (url) => {

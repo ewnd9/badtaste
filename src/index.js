@@ -1,12 +1,12 @@
 import tui from './tui/screen';
 import setupCredentials from './helpers/credentials';
-import Main from './components/main';
+import startApp from './components/main';
 
 import storage, { SEARCH_VK, PLAY, ADD_TO_PROFILE, SHOW_HELP, SWITCH_PANE } from './storage';
 
 setupCredentials().then(() => {
   let screen = tui();
-  let main = Main(screen);
+  startApp(screen);
 
   screen.key(['C-f'], () => storage.emit(SEARCH_VK));
   screen.key(['space'], () => storage.emit(PLAY));

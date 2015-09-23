@@ -40,7 +40,7 @@ let renderLeftPane = () => {
       return {
         name: `{bold}VK{/bold} Custom: ${group.name}`,
         fn: () => emitVkAudio({ type: 'group', id: group.id })
-      }
+      };
     }),
     {
       name: '{bold}VK{/bold} Add group',
@@ -64,7 +64,7 @@ let renderLeftPane = () => {
       fn: () => TracklistPrompt(screen).then((text) => {
         emitVkAudio({ type: 'tracklist', tracklist: text });
       })
-    },
+    }
   ];
 
   leftMenu = _.flatten(leftMenuRaw);

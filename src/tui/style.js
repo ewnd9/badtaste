@@ -26,7 +26,7 @@ export default {
     focus: {
       border: {
         fg: 'green'
-      },
+      }
     },
     selected: {
       fg: '#787878',

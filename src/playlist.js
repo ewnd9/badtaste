@@ -9,5 +9,5 @@ export default {
   getCurrentItem: () => playlist[current % playlist.length],
   getCurrentIndex: () => current,
   setCurrent: (index) => current = index,
-  moveNext: () => current = (current + 1) % playlist.length,
+  moveNext: () => current = (current + 1) % playlist.length
 };

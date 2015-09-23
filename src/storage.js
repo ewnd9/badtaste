@@ -4,7 +4,6 @@ var storage = require('dot-file-config')('.badtaste-npm', {
 
 storage.data.groups = storage.data.groups || [];
 
-import util from 'util';
 import events from 'events';
 
 let EventEmitter = events.EventEmitter;
