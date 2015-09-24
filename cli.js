@@ -5,12 +5,12 @@ var logger = new (winston.Logger)({
   transports: [
     new (winston.transports.File)({
       name: 'info-file',
-      filename: __dirname + '/logs/badtaste-info.log',
+      filename: process.env.HOME + '/.badtaste-npm-info.log',
       level: 'info'
     }),
     new (winston.transports.File)({
       name: 'error-file',
-      filename: __dirname + '/logs/badtaste-error.log',
+      filename: process.env.HOME + '/.badtaste-npm-error.log',
       level: 'error'
     })
   ]
