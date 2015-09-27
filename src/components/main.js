@@ -1,4 +1,4 @@
-import storage, { PLAY, SHOW_HELP, SWITCH_PANE } from './../storage';
+import storage, { PLAY, SHOW_HELP, SWITCH_PANE, FOCUS_RIGHT_PANE } from './../storage';
 
 import HelpBox from './../tui/help-box';
 
@@ -21,11 +21,10 @@ export default (_screen) => {
   leftPane = new LeftPane(screen);
   rightPane = new RightPane(screen);
 
-  LeftMenu(screen, leftPane);
-  RightMenu(screen, rightPane);
+  LeftMenu(screen, leftPane.box);
+  RightMenu(screen, rightPane.box);
 
-  rightPane.focus();
-  screen.render();
+  storage.emit(FOCUS_RIGHT_PANE);
 };
 
 var isPlaying = true;
@@ -41,11 +40,22 @@ storage.on(PLAY, () => {
 
 storage.on(SHOW_HELP, () => HelpBox(screen));
 
-var focusCount = 1;
+let focusPane = (pane1, pane2) => {
+  pane1.line.show();
+  pane1.box.focus();
+
+  pane2.line.hide();
+  screen.render();
+};
+
 storage.on(SWITCH_PANE, () => {
-  if ((focusCount++ % 2) === 0) {
-    rightPane.focus();
+  if (leftPane.line.hidden) {
+    focusPane(leftPane, rightPane);
   } else {
-    leftPane.focus();
+    focusPane(rightPane, leftPane);
   }
+});
+
+storage.on(FOCUS_RIGHT_PANE, () => {
+  focusPane(rightPane, leftPane);
 });

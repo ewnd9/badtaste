@@ -9,6 +9,8 @@ export default {
   input: true,
   scrollable: true,
   keys: true,
+  vi: true,
+  mouse: true,
   alwaysScroll: true,
   scrollbar: {
     ch: ' ',
@@ -19,14 +21,6 @@ export default {
     fg: 'white',
     border: {
       fg: '#f0f0f0'
-    },
-    hover: {
-      bg: 'green'
-    },
-    focus: {
-      border: {
-        fg: 'green'
-      }
     },
     selected: {
       fg: '#787878',

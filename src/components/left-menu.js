@@ -1,7 +1,10 @@
+import path from 'path';
+
 import _ from 'lodash';
-import storage, { OPEN_VK, SEARCH_VK } from './../storage';
+import storage, { OPEN_VK, SEARCH_VK, OPEN_FS } from './../storage';
 import { vkUrlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
 import TracklistPrompt from './../tui/tracklist-prompt';
+import FileManager from './../tui/file-manager';
 
 let screen = null;
 let leftPane = null;
@@ -38,7 +41,7 @@ let renderLeftPane = () => {
     },
     storage.data.groups.map((group) => {
       return {
-        name: `{bold}VK{/bold} Custom: ${group.name}`,
+        name: `{bold}VK{/bold} ${group.name}`,
         fn: () => emitVkAudio({ type: 'group', id: group.id })
       };
     }),
@@ -64,6 +67,26 @@ let renderLeftPane = () => {
       fn: () => TracklistPrompt(screen).then((text) => {
         emitVkAudio({ type: 'tracklist', tracklist: text });
       })
+    },
+    storage.data.fs.map((dir) => {
+      return {
+        name: `{bold}FS{/bold} ${path.basename(dir)}`,
+        fn: () => storage.emit(OPEN_FS, { path: dir })
+      };
+    }),
+    {
+      name: '{bold}FS{/bold} Add folder',
+      fn: () => {
+        FileManager(screen).then((path) => {
+          storage.data.fs.push(path);
+          storage.save();
+
+          renderLeftPane();
+          leftPane.focus();
+
+          storage.emit(OPEN_FS, { path: path });
+        });
+      }
     }
   ];
 

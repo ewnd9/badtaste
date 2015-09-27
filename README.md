@@ -1,6 +1,6 @@
 # badtaste
 
-> Listen music from [vk.com](http://vk.com/) in your terminal
+> Listen music from filesystem and [vk.com](http://vk.com/) in your terminal
 
 ![Demonstration](/media/screenshot.png?raw=true)
 
@@ -17,6 +17,19 @@
 ### Caveats
 
 - Only play/stop, pause is not implemented yet
+
+### Controls
+
+- `ctrl-f` search in vk.com
+- `space` play/stop
+- `x` add track to vk.com profile audio
+- `m` switch focused pane
+
+- `d` select playing track
+- `g` move to the beginning of list
+- `G` move to the end of list
+
+- `q` exit
 
 ## Install
 

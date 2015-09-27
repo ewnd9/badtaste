@@ -5,6 +5,7 @@
     "experimentalObjectRestSpread": true
   },
   "rules": {
+    "no-console": 0,
     "indent": [0, "tab"],
     "quotes": [2, "single"],
     "linebreak-style": [2, "unix"],
@@ -18,6 +19,7 @@
   },
   "extends": "eslint:recommended",
   "globals": {
-    "Logger": true
+    "Logger": true,
+    "console": true
   }
 }

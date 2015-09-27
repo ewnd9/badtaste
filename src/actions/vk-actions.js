@@ -2,31 +2,21 @@ import * as vk from 'vk-universal-api';
 
 import splitTracklist from 'split-tracklist';
 import Promise from 'bluebird';
-import _ from 'lodash';
+
+import { formatTrack } from './music-actions';
 
 let count = 1000;
 let offset = 0;
 
 let profileAudious = {};
-
-let formatTrack = (track) => {
-  let result = `{bold}${track.artist}{/bold} - ${track.title}`.replace(/&amp;/g, '&');
-  let duration = _.padLeft(track.duration / 60 | 0, 2, '0') + ':' + _.padLeft(track.duration % 60, 2, '0');
-  result += ` {|}${duration}`;
-
-  if (track.notAvailable) {
-    result = `Not Found: ${result}`;
-  }
-
-  return result;
-};
-
-export let formatTrackFull = (track) => (track.isAdded ? ' + ' : ' - ') + formatTrack(track);
+let formatTrackFull = (track) => (track.isAdded ? ' + ' : ' - ') + formatTrack(track);
 
 let handleData = (result) => {
   return result.items.map(obj => {
+    obj.artist = obj.artist.replace(/&amp;/g, '&');
+    obj.title = obj.title.replace(/&amp;/g, '&');
+    
     obj.trackTitle = formatTrack(obj);
-
     obj.isAdded = typeof profileAudious[obj.trackTitle] !== 'undefined';
     obj.trackTitleFull = formatTrackFull(obj);
 
@@ -72,7 +62,6 @@ export let getBatchSearch = (text, onTrack) => {
     }).then((track) => {
       if (!track) {
         track = {
-          notAvailable: true,
           artist: current.artist,
           title: current.title
         };

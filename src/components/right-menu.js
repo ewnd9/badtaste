@@ -1,5 +1,6 @@
-import storage, { OPEN_VK, ADD_TO_PROFILE } from './../storage';
+import storage, { OPEN_VK, ADD_TO_PROFILE, OPEN_FS, FOCUS_RIGHT_PANE, MOVE_TO_PLAYING } from './../storage';
 import * as vkActions from './../actions/vk-actions';
+import * as fsActions from './../actions/fs-actions';
 
 import playlist from './../playlist';
 import * as player from './../player/player-control';
@@ -12,35 +13,53 @@ import InfoBox from './../tui/info-box';
 let screen = null;
 let rightPane = null;
 
+let playCurrent = () => {
+  let urlFinded = false;
+
+  while (!urlFinded) {
+    let url = playlist.getCurrent();
+
+    if (url) {
+      player.play(url);
+
+      rightPane.select(playlist.getCurrentIndex());
+      storage.emit(FOCUS_RIGHT_PANE);
+
+      urlFinded = true;
+    } else {
+      playlist.moveNext();
+    }
+  }
+};
+
 export default (_screen, _rightPane) => {
   screen = _screen;
   rightPane = _rightPane;
 
   rightPane.on('select', function(item, index) {
     playlist.setCurrent(index);
-
-    if (playlist.getCurrentItem().notAvailable) {
-      rightPane.down(1);
-    } else {
-      player.play(playlist.getCurrent());
-    }
+    playCurrent();
   });
 
   player.setOnNextSong(() => {
     playlist.moveNext();
-    player.play(playlist.getCurrent());
-
-    rightPane.select(playlist.getCurrentIndex());
-    rightPane.focus();
+    playCurrent();
   });
 };
 
+let setListElements = (elements) => {
+  rightPane.clearItems();
+  rightPane.setItems(elements);
+
+  storage.emit(FOCUS_RIGHT_PANE);
+};
+
 let loadAudio = (audio) => {
-  rightPane.setItems(_.pluck(audio, 'trackTitleFull'));
-  rightPane.focus();
+  setListElements(_.pluck(audio, 'trackTitleFull'));
+  storage.emit(FOCUS_RIGHT_PANE);
 
   playlist.setPlaylist(audio);
-  player.play(playlist.getCurrent());
+  playCurrent();
 };
 
 storage.on(OPEN_VK, (payload) => {
@@ -51,13 +70,13 @@ storage.on(OPEN_VK, (payload) => {
   } else if (payload.type === 'search') {
     vkActions.getSearch(payload.query).then(loadAudio).catch((err) => Logger.error(err));
   } else if (payload.type === 'tracklist') {
-    rightPane.setItems([]);
+    setListElements([]);
     playlist.setPlaylist([]);
 
     let spinner = LoadingSpinner(screen, 'Adding...', false);
     let onTrack = (track, index, length) => {
       rightPane.pushItem(track.trackTitleFull);
-      rightPane.focus();
+      storage.emit(FOCUS_RIGHT_PANE);
 
       playlist.push(track);
       spinner.setContent(`${index  + 1} / ${length}. press z to cancel`);
@@ -81,7 +100,7 @@ storage.on(ADD_TO_PROFILE, () => {
 
     return vkActions.addToProfile(selected).then((selected) => {
       rightPane.setItem(listEl, selected.trackTitleFull);
-      rightPane.focus();
+      storage.emit(FOCUS_RIGHT_PANE);
 
       InfoBox(screen, 'Successfully added to your profile');
       spinner.stop();
@@ -107,4 +126,18 @@ storage.on(ADD_TO_PROFILE, () => {
   } else {
     addToProfile();
   }
+});
+
+storage.on(OPEN_FS, (data) => {
+  let folder = fsActions.getFolder(data.path);
+
+  fsActions.getTags(folder).then((result) => {
+    var collection = fsActions.flattenCollection(result);
+    loadAudio(collection);
+  });
+});
+
+storage.on(MOVE_TO_PLAYING, (data) => {
+  rightPane.select(playlist.getCurrentIndex());
+  storage.emit(FOCUS_RIGHT_PANE);
 });
