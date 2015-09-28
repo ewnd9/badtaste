@@ -18,12 +18,8 @@ export default {
     fg: 'red'
   },
   style: {
-    fg: 'white',
-    border: {
-      fg: '#f0f0f0'
-    },
     selected: {
-      fg: '#787878',
+      fg: 'grey',
       bg: 'white'
     }
   }
