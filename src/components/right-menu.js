@@ -1,6 +1,8 @@
-import storage, { OPEN_VK, ADD_TO_PROFILE, OPEN_FS, FOCUS_RIGHT_PANE, MOVE_TO_PLAYING } from './../storage';
+import storage, { OPEN_VK, ADD_TO_PROFILE, OPEN_FS, FOCUS_RIGHT_PANE, MOVE_TO_PLAYING, OPEN_GM_ALBUM } from './../storage';
+
 import * as vkActions from './../actions/vk-actions';
 import * as fsActions from './../actions/fs-actions';
+import * as gmActions from './../actions/gm-actions';
 
 import playlist from './../playlist';
 import * as player from './../player/player-control';
@@ -9,6 +11,8 @@ import _ from 'lodash';
 
 import LoadingSpinner from './../tui/loading-spinner';
 import InfoBox from './../tui/info-box';
+
+import Promise from 'bluebird';
 
 let screen = null;
 let rightPane = null;
@@ -20,7 +24,12 @@ let playCurrent = () => {
     let url = playlist.getCurrent();
 
     if (url) {
-      player.play(url);
+      (typeof url === 'function' ? url() : Promise.resolve(url)).then((url) => {
+        player.play(url);
+        Logger.info(url);
+      }).catch((err) => {
+        Logger.error(err);
+      });
 
       rightPane.select(playlist.getCurrentIndex());
       storage.emit(FOCUS_RIGHT_PANE);
@@ -140,4 +149,10 @@ storage.on(OPEN_FS, (data) => {
 storage.on(MOVE_TO_PLAYING, (data) => {
   rightPane.select(playlist.getCurrentIndex());
   storage.emit(FOCUS_RIGHT_PANE);
+});
+
+storage.on(OPEN_GM_ALBUM, (data) => {
+  gmActions.getAlbum(data.albumId).then((result) => {
+    loadAudio(result);
+  });
 });

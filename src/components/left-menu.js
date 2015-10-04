@@ -1,10 +1,14 @@
 import path from 'path';
 
 import _ from 'lodash';
-import storage, { OPEN_VK, SEARCH_VK, OPEN_FS } from './../storage';
-import { vkUrlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
+import storage, { OPEN_VK, SEARCH_VK, OPEN_FS, OPEN_GM_ALBUM } from './../storage';
+import { prompt, vkUrlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
+
 import TracklistPrompt from './../tui/tracklist-prompt';
 import FileManager from './../tui/file-manager';
+import SelectList from './../tui/select-list';
+
+import * as gmActions from './../actions/gm-actions';
 
 let screen = null;
 let leftPane = null;
@@ -66,6 +70,17 @@ let renderLeftPane = () => {
       name: '{bold}VK{/bold} Add playlist',
       fn: () => TracklistPrompt(screen).then((text) => {
         emitVkAudio({ type: 'tracklist', tracklist: text });
+      })
+    },
+    {
+      name: '{bold}GM{/bold} Search',
+      fn: () => prompt(screen, 'Google Music', 'Search').then((query) => {
+        gmActions.findAlbum(query).then((result) => {
+          let labels = result.map((entry) => `${entry.album.artist} - ${entry.album.name}`);
+          SelectList(screen, labels).then((index) => {
+            storage.emit(OPEN_GM_ALBUM, { albumId: result[index].album.albumId });
+          });
+        });
       })
     },
     storage.data.fs.map((dir) => {

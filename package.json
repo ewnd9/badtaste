@@ -33,7 +33,7 @@
     "id3js": "^1.1.3",
     "inquirer-credentials": "^1.2.0",
     "lodash": "^3.10.1",
-    "player": "^0.5.0",
+    "player": "git://github.com/ewnd9/player.git#4dad1193ec2765db229dc174a43ef387ccf3b01a",
     "split-tracklist": "^1.1.1",
     "vk-universal-api": "0.0.2",
     "winston": "^1.0.1"

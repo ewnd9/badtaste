@@ -2,7 +2,7 @@ import * as vk from 'vk-universal-api';
 import _prompt from './../tui/prompt';
 import Promise from 'bluebird';
 
-let prompt = (screen, label, question) => {
+export let prompt = (screen, label, question) => {
   return new Promise((resolve, reject) => {
     _prompt(screen, label, question, (value) => {
       resolve(value);

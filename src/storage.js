@@ -21,5 +21,6 @@ export const SWITCH_PANE = 'SWITCH_PANE';
 export const FOCUS_RIGHT_PANE = 'FOCUS_RIGHT_PANE';
 export const MOVE_TO_PLAYING = 'MOVE_TO_PLAYING';
 export const OPEN_FS = 'OPEN_FS';
+export const OPEN_GM_ALBUM = 'OPEN_GM_ALBUM';
 
 export default storage;

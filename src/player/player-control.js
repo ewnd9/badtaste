@@ -11,10 +11,11 @@ let createProcess = (url) => {
   });
 
   ls.stderr.on('data', function (data) {
-    if (data.toString().trim() === 'No next song was found') {
+    data = data.toString();
+    if (data.trim() === 'No next song was found') {
       onNextSong();
     } else {
-      // Logger.error('error', data);
+      Logger.error(data.substr(0, 100));
     }
   });
 
