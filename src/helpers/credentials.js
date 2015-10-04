@@ -17,6 +17,9 @@ export default (force) => {
 		return result;
 	};
 
+	vkCredentials.init();
+	gmCredentials.init();
+
 	if (!force && (vkCredentials.hasData() || gmCredentials.hasData())) {
 		return Promise.resolve(true);
 	} else {

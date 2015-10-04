@@ -15,15 +15,8 @@ let password = {
   type: 'input'
 };
 
-export let hasData = () => {
-  if (storage.data.googleEmail) {
-    gmActions.setCredentials(storage.data.googleEmail, storage.data.googlePassword);
-    return storage.data.googleEmail;
-  } else {
-    return false;
-  }
-};
-
+export let hasData = () => typeof storage.data.googleEmail !== 'undefined';
+export let init = () => hasData() ? gmActions.setCredentials(storage.data.googleEmail, storage.data.googlePassword) : undefined;
 export let getUser = () => storage.data.googleEmail;
 
 export let dialog = () => {
@@ -31,5 +24,7 @@ export let dialog = () => {
     storage.data.googleEmail = credentials.googleEmail;
     storage.data.googlePassword = credentials.googlePassword;
     storage.save();
+
+    init();
   });
 };

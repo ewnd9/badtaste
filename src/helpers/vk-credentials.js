@@ -23,15 +23,8 @@ export let setupToken = (response) => {
   vk.setToken(token);
 };
 
-export let hasData = () => {
-  if (storage.data.vkToken) {
-    setupToken(storage.data.vkToken);
-    return true;
-  } else {
-    return false;
-  }
-};
-
+export let hasData = () => typeof storage.data.vkToken !== 'undefined';
+export let init = () => hasData() ? setupToken(storage.data.vkToken) : undefined;
 export let getUser = () => storage.data.vkUsername;
 
 export let dialog = () => {
@@ -41,8 +34,10 @@ export let dialog = () => {
     return vk.method('users.get').then((user) => {
       storage.data.vkUsername = user.meta.first_name + ' ' + user.meta.last_name;
       storage.data.vkToken = credentials.url;
-      
+
       storage.save();
+
+      init();
     }).catch((err) => {
       console.log('wrong data');
     });
