@@ -1,5 +1,7 @@
 import * as vk from 'vk-universal-api';
-import inquirerCredentials from 'inquirer-credentials';
+import inquirer from 'inquirer-question';
+
+import storage from './../storage';
 
 let authUrl = 'https://oauth.vk.com/authorize?client_id=5075122&scope=audio,offline&redirect_uri=https://oauth.vk.com/blank.html&display=page&v=5.23&response_type=token';
 let responseExample = 'https://oauth.vk.com/blank.html#access_token=<85 symbols>&expires_in=0&user_id=<user_id>';
@@ -7,17 +9,42 @@ let responseExample = 'https://oauth.vk.com/blank.html#access_token=<85 symbols>
 let token = {
   name: 'url',
   type: 'input',
-  hint: `Open "${authUrl}" in browser.\nCopy paste new url here.\nIt should look "${responseExample}"`,
-  env: 'VK_TOKEN'
+  message: `Open "${authUrl}" in browser.\nCopy paste new url here.\nIt should look "${responseExample}"`
 };
 
-let tokenRegex = /.+access_token=([a-z0-9]+)&.+/g;
+let extractToken = (data) => {
+  let tokenRegex = /.+access_token=([a-z0-9]+)&.+/g;
+  let match = tokenRegex.exec(data);
+  return match[1];
+};
 
-export default () => {
-  return inquirerCredentials('.badtaste-npm-credentials', [token]).then(function(credentials) {
-    var match = tokenRegex.exec(credentials.url);
+export let setupToken = (response) => {
+  var token = extractToken(response);
+  vk.setToken(token);
+};
 
-    var token = match[1];
-    vk.setToken(token);
+export let hasData = () => {
+  if (storage.data.vkToken) {
+    setupToken(storage.data.vkToken);
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export let getUser = () => storage.data.vkUsername;
+
+export let dialog = () => {
+  return inquirer.prompt([token]).then((credentials) => {
+    setupToken(credentials.url);
+
+    return vk.method('users.get').then((user) => {
+      storage.data.vkUsername = user.meta.first_name + ' ' + user.meta.last_name;
+      storage.data.vkToken = credentials.url;
+      
+      storage.save();
+    }).catch((err) => {
+      console.log('wrong data');
+    });
   });
 };

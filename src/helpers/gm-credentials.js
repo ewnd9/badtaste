@@ -1,21 +1,35 @@
-import inquirerCredentials from 'inquirer-credentials';
+import inquirer from 'inquirer-question';
 import storage from './../storage';
 
+import * as gmActions from './../actions/gm-actions';
+
 let email = {
-  name: 'google-email',
-  type: 'input',
-  env: 'GOOGLE_EMAIL'
+  name: 'googleEmail',
+  message: 'google email',
+  type: 'input'
 };
 
 let password = {
-  name: 'google-password',
-  type: 'input',
-  env: 'GOOGLE_PASSWORD'
+  name: 'googlePassword',
+  message: 'google password (use google\'s one time passwords generator https://security.google.com/settings/security/apppasswords?pli=1)',
+  type: 'input'
 };
 
-export default () => {
-  return inquirerCredentials('.badtaste-npm-credentials', [email, password]).then((credentials) => {
-		storage.googleEmail = credentials[email.name];
-		storage.googlePassword = credentials[password.name];
+export let hasData = () => {
+  if (storage.data.googleEmail) {
+    gmActions.setCredentials(storage.data.googleEmail, storage.data.googlePassword);
+    return storage.data.googleEmail;
+  } else {
+    return false;
+  }
+};
+
+export let getUser = () => storage.data.googleEmail;
+
+export let dialog = () => {
+  return inquirer.prompt([email, password]).then((credentials) => {
+    storage.data.googleEmail = credentials.googleEmail;
+    storage.data.googlePassword = credentials.googlePassword;
+    storage.save();
   });
 };

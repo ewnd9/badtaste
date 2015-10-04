@@ -1,10 +1,21 @@
 import tui from './tui/screen';
 import setupCredentials from './helpers/credentials';
 import startApp from './components/main';
+import meow from 'meow';
 
 import storage, { SEARCH_VK, PLAY, ADD_TO_PROFILE, SHOW_HELP, SWITCH_PANE, MOVE_TO_PLAYING } from './storage';
 
-setupCredentials().then(() => {
+let cli = meow(`
+  Usage
+    $ badtaste
+
+  Options
+    --setup Setup vk and google music login credentials
+`, {
+  pkg: './../package.json'
+});
+
+setupCredentials(cli.flags.setup).then(() => {
   let screen = tui();
   startApp(screen);
 

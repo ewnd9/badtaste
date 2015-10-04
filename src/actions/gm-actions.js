@@ -1,13 +1,12 @@
 import PlayMusic from 'playmusic';
 import Promise from 'bluebird';
-import storage from './../storage';
 import { format } from './music-actions';
 
 let pm = new PlayMusic();
 
-let init = () => {
+export let setCredentials = (email, password) => {
 	return new Promise((resolve, reject) => {
-		pm.init({ email: storage.googleEmail, password: storage.googlePassword }, () => {
+		pm.init({ email: email, password: password }, () => {
 			resolve();
 		});
 	});
@@ -26,32 +25,28 @@ export let getUrl = (track) => {
 };
 
 export let getAlbum = (albumId) => {
-	return init().then(() => {
-		return new Promise((resolve, reject) => {
-			pm.getAlbum(albumId, true, (err, fullAlbumDetails) => {
-				let result = fullAlbumDetails.tracks.map((track) => {
-					return {
-						artist: track.artist,
-						title: track.title,
-						url: () => getUrl(track)
-					};
-				});
-				resolve(format(result));
+	return new Promise((resolve, reject) => {
+		pm.getAlbum(albumId, true, (err, fullAlbumDetails) => {
+			let result = fullAlbumDetails.tracks.map((track) => {
+				return {
+					artist: track.artist,
+					title: track.title,
+					url: () => getUrl(track)
+				};
 			});
+			resolve(format(result));
 		});
 	});
 };
 
 export let findAlbum = (query) => {
-	return init().then(() => {
-		return new Promise((resolve, reject) => {
-			pm.search(query, 20, function (err, results) {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(results.entries.filter((entry) => entry.type === '3' && entry.album));
-				}
-			});
+	return new Promise((resolve, reject) => {
+		pm.search(query, 20, function (err, results) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(results.entries.filter((entry) => entry.type === '3' && entry.album));
+			}
 		});
 	});
 };
