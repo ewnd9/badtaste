@@ -12,7 +12,7 @@ let profileAudious = {};
 let formatTrackFull = (track) => (track.isAdded ? ' + ' : ' - ') + formatTrack(track);
 
 let handleData = (result) => {
-  return result.map(obj => {
+  return result.filter(obj => obj.artist && obj.title).map(obj => {
     obj.isAdded = typeof profileAudious[obj.artist + obj.title] !== 'undefined';
 
     obj.artist = obj.artist.replace(/&amp;/g, '&');

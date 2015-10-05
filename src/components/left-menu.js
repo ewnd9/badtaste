@@ -1,5 +1,3 @@
-import path from 'path';
-
 import _ from 'lodash';
 import storage, { OPEN_VK, SEARCH_VK, OPEN_FS, OPEN_GM_ALBUM } from './../storage';
 import { prompt, urlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
@@ -35,7 +33,21 @@ let selectLeftPane = (item, index) => {
 
 let leftMenu = [];
 
+let nameWithCount = (name, xs) => name + (xs.length > 0 ? ` (${xs.length})` : '');
+let selectOrSearch = (labels, onLabel, onSearch) => {
+  SelectList(screen, ['> Search'].concat(labels)).then((index) => {
+    if (index === 0) {
+      onSearch();
+    } else {
+      onLabel(index - 1);
+    }
+  });
+};
+
 let renderLeftPane = () => {
+  let vkLinks = storage.data.vkLinks;
+  let gmLinks = storage.data.gmLinks;
+
   let leftMenuRaw = [
     {
       name: '{bold}VK{/bold} Profile',
@@ -45,69 +57,82 @@ let renderLeftPane = () => {
       name: '{bold}VK{/bold} Search',
       fn: searchFn
     },
-    storage.data.vkLinks.map((link) => {
-      return {
-        name: `{bold}VK{/bold} ${link.name}`,
-        fn: () => emitVkAudio(link.data)
-      };
-    }),
     {
-      name: '{bold}VK{/bold} Add link',
-      fn: () => urlPrompt(screen).then((promptResult) => {
-        vkActions.detectUrlType(promptResult.url).then((data) => {
-          if (data) {
-            storage.data.vkLinks.push({
-              data,
-              name: promptResult.name
-            });
-            storage.save();
-
-            renderLeftPane();
-            
-            leftPane.focus();
-            screen.render();
-
-            emitVkAudio(data);
-          } else {
-            Toast(screen, 'Error');
-          }
-        });
-      })
-    },
-    {
-      name: '{bold}VK{/bold} Add playlist',
+      name: '{bold}VK{/bold} Batch search',
       fn: () => TracklistPrompt(screen).then((text) => {
         emitVkAudio({ type: 'tracklist', tracklist: text });
       })
     },
     {
-      name: '{bold}GM{/bold} Search',
-      fn: () => prompt(screen, 'Google Music', 'Search').then((query) => {
-        gmActions.findAlbum(query).then((result) => {
-          let labels = result.map((entry) => `${entry.album.artist} - ${entry.album.name}`);
-          SelectList(screen, labels).then((index) => {
-            storage.emit(OPEN_GM_ALBUM, { albumId: result[index].album.albumId });
+      name: nameWithCount('{bold}VK{/bold} Play link', vkLinks),
+      fn: () => {
+        let labels = vkLinks.map(link => link.name);
+        selectOrSearch(labels, (i) => emitVkAudio(vkLinks[i].data), () => {
+          urlPrompt(screen, 'Enter url', 'Enter alias for menu').then((promptResult) => {
+            vkActions.detectUrlType(promptResult.url).then((data) => {
+              if (data) {
+                storage.data.vkLinks.unshift({
+                  data,
+                  name: promptResult.name
+                });
+                storage.save();
+
+                renderLeftPane();
+
+                leftPane.focus();
+                screen.render();
+
+                emitVkAudio(data);
+              } else {
+                Toast(screen, 'Error');
+              }
+            });
           });
         });
-      })
+      }
     },
-    storage.data.fs.map((dir) => {
-      return {
-        name: `{bold}FS{/bold} ${path.basename(dir)}`,
-        fn: () => storage.emit(OPEN_FS, { path: dir })
-      };
-    }),
     {
-      name: '{bold}FS{/bold} Add folder',
+      name: nameWithCount('{bold}GM{/bold} Play album', gmLinks),
       fn: () => {
-        FileManager(screen).then((path) => {
-          storage.data.fs.push(path);
-          storage.save();
+        let labels = gmLinks.map(link => link.name);
+        selectOrSearch(labels, (i) => storage.emit(OPEN_GM_ALBUM, gmLinks[i].data), () => {
+          prompt(screen, 'Google Music', 'Search').then((query) => {
+            gmActions.findAlbum(query).then((result) => {
+              let labels = result.map((entry) => `${entry.album.artist} - ${entry.album.name}`);
+              SelectList(screen, labels).then((index) => {
+                let payload = { albumId: result[index].album.albumId };
 
-          renderLeftPane();
-          leftPane.focus();
+                storage.data.gmLinks.unshift({
+                  data: payload,
+                  name: labels[index]
+                });
+                storage.save();
 
-          storage.emit(OPEN_FS, { path: path });
+                renderLeftPane();
+
+                leftPane.focus();
+                screen.render();
+
+                storage.emit(OPEN_GM_ALBUM, payload);
+              });
+            });
+          });
+        });
+      }
+    },
+    {
+      name: nameWithCount('{bold}FS{/bold} Play folder', storage.data.fs),
+      fn: () => {
+        selectOrSearch(storage.data.fs, (i) => storage.emit(OPEN_FS, { path: storage.data.fs[i] }), () => {
+          FileManager(screen).then((path) => {
+            storage.data.fs.unshift(path);
+            storage.save();
+
+            renderLeftPane();
+            leftPane.focus();
+
+            storage.emit(OPEN_FS, { path: path });
+          });
         });
       }
     }

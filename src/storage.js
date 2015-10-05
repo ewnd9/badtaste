@@ -3,6 +3,7 @@ var storage = require('dot-file-config')('.badtaste-npm', {
 });
 
 storage.data.vkLinks = storage.data.vkLinks || [];
+storage.data.gmLinks = storage.data.gmLinks || [];
 storage.data.fs = storage.data.fs || [];
 
 import events from 'events';
