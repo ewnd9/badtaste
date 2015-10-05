@@ -13,28 +13,25 @@ let formatTrackFull = (track) => (track.isAdded ? ' + ' : ' - ') + formatTrack(t
 
 let handleData = (result) => {
   return result.map(obj => {
+    obj.isAdded = typeof profileAudious[obj.artist + obj.title] !== 'undefined';
+
     obj.artist = obj.artist.replace(/&amp;/g, '&');
     obj.title = obj.title.replace(/&amp;/g, '&');
 
-    obj.trackTitle = formatTrack(obj);
-    obj.isAdded = typeof profileAudious[obj.trackTitle] !== 'undefined';
     obj.trackTitleFull = formatTrackFull(obj);
-
     return obj;
   });
 };
 
 export let getProfileAudio = () => {
   let request = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count });
-  return request.then(response => handleData(response.items)).then((result) => {
-    result.forEach((track) => {
-      profileAudious[track.trackTitle] = true;
-
-      track.isAdded = true;
-      track.trackTitleFull = formatTrackFull(track);
+  return request.then(response => {
+    response.items.forEach(track => {
+      profileAudious[track.artist + track.title] = true;
     });
-    return result;
-  });
+
+    return response.items;
+  }).then(response => handleData(response));
 };
 
 export let getGroupAudio = (groupId, albumId) => {
