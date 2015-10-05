@@ -27,6 +27,8 @@ export let hasData = () => typeof storage.data.vkToken !== 'undefined';
 export let init = () => hasData() ? setupToken(storage.data.vkToken) : undefined;
 export let getUser = () => storage.data.vkUsername;
 
+storage.vkHasData = hasData;
+
 export let dialog = () => {
   return inquirer.prompt([token]).then((credentials) => {
     setupToken(credentials.url);

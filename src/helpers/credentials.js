@@ -13,6 +13,7 @@ export default (force) => {
 
 		result.choices['vk' + (vkCredentials.hasData() ? ' (' + vkCredentials.getUser() + ')': '')] = vkCredentials.dialog;
 		result.choices['google music' + (gmCredentials.hasData() ? ' (' + gmCredentials.getUser() + ')' : '')] = gmCredentials.dialog;
+		// result.choices['continue'] = () => Promise.resolve(true);
 
 		return result;
 	};

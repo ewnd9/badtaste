@@ -19,6 +19,8 @@ export let hasData = () => typeof storage.data.googleEmail !== 'undefined';
 export let init = () => hasData() ? gmActions.setCredentials(storage.data.googleEmail, storage.data.googlePassword) : undefined;
 export let getUser = () => storage.data.googleEmail;
 
+storage.gmHasData = hasData;
+
 export let dialog = () => {
   return inquirer.prompt([email, password]).then((credentials) => {
     storage.data.googleEmail = credentials.googleEmail;
