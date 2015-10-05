@@ -3,6 +3,8 @@ var storage = require('dot-file-config')('.badtaste-npm', {
 });
 
 storage.data.groups = storage.data.groups || [];
+storage.data.vkWall = storage.data.vkWall || [];
+
 storage.data.fs = storage.data.fs || [];
 
 import events from 'events';

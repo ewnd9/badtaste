@@ -12,6 +12,17 @@ export let prompt = (screen, label, question) => {
 
 let label = '{blue-fg}Question{/blue-fg}';
 
+export let urlPrompt = (screen, urlQuestion, nameQuestion) => {
+  return prompt(screen, label, urlQuestion).then((url) => {
+    return prompt(screen, label, nameQuestion).then((name) => {
+      return {
+        url,
+        name
+      };
+    });
+  });
+};
+
 export let vkUrlPrompt = (screen) => {
   let question = 'Enter vk user or community url';
 

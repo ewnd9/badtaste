@@ -12,10 +12,10 @@ let profileAudious = {};
 let formatTrackFull = (track) => (track.isAdded ? ' + ' : ' - ') + formatTrack(track);
 
 let handleData = (result) => {
-  return result.items.map(obj => {
+  return result.map(obj => {
     obj.artist = obj.artist.replace(/&amp;/g, '&');
     obj.title = obj.title.replace(/&amp;/g, '&');
-    
+
     obj.trackTitle = formatTrack(obj);
     obj.isAdded = typeof profileAudious[obj.trackTitle] !== 'undefined';
     obj.trackTitleFull = formatTrackFull(obj);
@@ -26,7 +26,7 @@ let handleData = (result) => {
 
 export let getProfileAudio = () => {
   let request = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count });
-  return request.then(handleData).then((result) => {
+  return request.then(response => handleData(response.items)).then((result) => {
     result.forEach((track) => {
       profileAudious[track.trackTitle] = true;
 
@@ -39,12 +39,20 @@ export let getProfileAudio = () => {
 
 export let getGroupAudio = (groupId) => {
   let request = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count, owner_id: groupId });
-  return request.then(handleData);
+  return request.then(response => handleData(response.items));
+};
+
+export let getWallAudio = (id) => {
+  let request = vk.method('wall.getById', { posts: [id] }, { transformResponse: false });
+  return request.then((result) => {
+    let attachments = result.body.response[0].attachments.filter(a => a.type === 'audio').map(a => a.audio);
+    return handleData(attachments);
+  });
 };
 
 export let getSearch = (query) => {
   let request = vk.method('audio.search', { need_user: 1, count: count, offset: offset * count, q: query });
-  return request.then(handleData);
+  return request.then(response => handleData(response.items));
 };
 
 export let getBatchSearch = (text, onTrack) => {

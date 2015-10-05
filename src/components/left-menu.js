@@ -2,7 +2,7 @@ import path from 'path';
 
 import _ from 'lodash';
 import storage, { OPEN_VK, SEARCH_VK, OPEN_FS, OPEN_GM_ALBUM } from './../storage';
-import { prompt, vkUrlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
+import { prompt, urlPrompt, vkUrlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
 
 import TracklistPrompt from './../tui/tracklist-prompt';
 import FileManager from './../tui/file-manager';
@@ -64,6 +64,30 @@ let renderLeftPane = () => {
         leftPane.focus();
 
         emitVkAudio({ type: 'group', id: id });
+      })
+    },
+    storage.data.vkWall.map((group) => {
+      return {
+        name: `{bold}VK{/bold} ${group.name}`,
+        fn: () => emitVkAudio({ type: 'wall', id: group.id })
+      };
+    }),
+    {
+      name: '{bold}VK{/bold} Add wall post',
+      fn: () => urlPrompt(screen).then((data) => {
+        let { url, name } = data;
+        let id = url.split('vk.com/wall')[1];
+
+        storage.data.vkWall.push({
+          id: id,
+          name: name
+        });
+        storage.save();
+
+        renderLeftPane();
+        leftPane.focus();
+
+        emitVkAudio({ type: 'wall', id: id });
       })
     },
     {
