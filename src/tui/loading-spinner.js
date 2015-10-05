@@ -1,6 +1,6 @@
 import blessed from 'blessed';
 
-export default (screen, message, lockKeys = true) => {
+export default (screen, message, lockKeys = true, label = ' {blue-fg}Loading{/blue-fg} ') => {
   var loader = blessed.loading({
     parent: screen,
     border: 'line',
@@ -8,7 +8,7 @@ export default (screen, message, lockKeys = true) => {
     width: 'half',
     top: 'center',
     left: 'center',
-    label: ' {blue-fg}Loading{/blue-fg} ',
+    label: label,
     tags: true,
     keys: true,
     hidden: true,

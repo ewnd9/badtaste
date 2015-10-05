@@ -1,4 +1,4 @@
-import storage, { PLAY, SHOW_HELP, SWITCH_PANE, FOCUS_RIGHT_PANE } from './../storage';
+import storage, { PLAY, SHOW_HELP, SWITCH_PANE, FOCUS_LEFT_PANE, FOCUS_RIGHT_PANE } from './../storage';
 
 import HelpBox from './../tui/help-box';
 
@@ -54,6 +54,10 @@ storage.on(SWITCH_PANE, () => {
   } else {
     focusPane(rightPane, leftPane);
   }
+});
+
+storage.on(FOCUS_LEFT_PANE, () => {
+  focusPane(leftPane, rightPane);
 });
 
 storage.on(FOCUS_RIGHT_PANE, () => {

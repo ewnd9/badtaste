@@ -2,13 +2,15 @@ import path from 'path';
 
 import _ from 'lodash';
 import storage, { OPEN_VK, SEARCH_VK, OPEN_FS, OPEN_GM_ALBUM } from './../storage';
-import { prompt, urlPrompt, vkUrlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
+import { prompt, urlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
 
 import TracklistPrompt from './../tui/tracklist-prompt';
 import FileManager from './../tui/file-manager';
 import SelectList from './../tui/select-list';
+import Toast from './../tui/toast';
 
 import * as gmActions from './../actions/gm-actions';
+import * as vkActions from './../actions/vk-actions';
 
 let screen = null;
 let leftPane = null;
@@ -43,51 +45,33 @@ let renderLeftPane = () => {
       name: '{bold}VK{/bold} Search',
       fn: searchFn
     },
-    storage.data.groups.map((group) => {
+    storage.data.vkLinks.map((link) => {
       return {
-        name: `{bold}VK{/bold} ${group.name}`,
-        fn: () => emitVkAudio({ type: 'group', id: group.id })
+        name: `{bold}VK{/bold} ${link.name}`,
+        fn: () => emitVkAudio(link.data)
       };
     }),
     {
-      name: '{bold}VK{/bold} Add group',
-      fn: () => vkUrlPrompt(screen).then((data) => {
-        let { id, name } = data;
+      name: '{bold}VK{/bold} Add link',
+      fn: () => urlPrompt(screen).then((promptResult) => {
+        vkActions.detectUrlType(promptResult.url).then((data) => {
+          if (data) {
+            storage.data.vkLinks.push({
+              data,
+              name: promptResult.name
+            });
+            storage.save();
 
-        storage.data.groups.push({
-          id: id,
-          name: name
+            renderLeftPane();
+            
+            leftPane.focus();
+            screen.render();
+
+            emitVkAudio(data);
+          } else {
+            Toast(screen, 'Error');
+          }
         });
-        storage.save();
-
-        renderLeftPane();
-        leftPane.focus();
-
-        emitVkAudio({ type: 'group', id: id });
-      })
-    },
-    storage.data.vkWall.map((group) => {
-      return {
-        name: `{bold}VK{/bold} ${group.name}`,
-        fn: () => emitVkAudio({ type: 'wall', id: group.id })
-      };
-    }),
-    {
-      name: '{bold}VK{/bold} Add wall post',
-      fn: () => urlPrompt(screen).then((data) => {
-        let { url, name } = data;
-        let id = url.split('vk.com/wall')[1];
-
-        storage.data.vkWall.push({
-          id: id,
-          name: name
-        });
-        storage.save();
-
-        renderLeftPane();
-        leftPane.focus();
-
-        emitVkAudio({ type: 'wall', id: id });
       })
     },
     {

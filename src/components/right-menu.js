@@ -74,8 +74,8 @@ let loadAudio = (audio) => {
 storage.on(OPEN_VK, (payload) => {
   if (payload.type === 'profile') {
     vkActions.getProfileAudio().then(loadAudio).catch((err) => Logger.error(err));
-  } else if (payload.type === 'group') {
-    vkActions.getGroupAudio(payload.id).then(loadAudio).catch((err) => Logger.error(err));
+  } else if (payload.type === 'audio') {
+    vkActions.getGroupAudio(payload.owner_id, payload.album_id).then(loadAudio).catch((err) => Logger.error(err));
   } else if (payload.type === 'wall') {
     vkActions.getWallAudio(payload.id).then(loadAudio).catch((err) => Logger.error(err));
   } else if (payload.type === 'search') {

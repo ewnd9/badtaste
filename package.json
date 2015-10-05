@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node cli.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --require babel/register",
+    "test:watch": "mocha -w --require babel/register"
   },
   "preferGlobal": "true",
   "repository": {
@@ -39,5 +40,9 @@
     "split-tracklist": "^1.1.1",
     "vk-universal-api": "0.0.2",
     "winston": "^1.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
   }
 }

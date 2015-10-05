@@ -37,8 +37,8 @@ export let getProfileAudio = () => {
   });
 };
 
-export let getGroupAudio = (groupId) => {
-  let request = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count, owner_id: groupId });
+export let getGroupAudio = (groupId, albumId) => {
+  let request = vk.method('audio.get', { need_user: 1, count: count, offset: offset * count, owner_id: groupId, album_id: albumId });
   return request.then(response => handleData(response.items));
 };
 
@@ -99,4 +99,38 @@ export let addOnTop = (selected) => {
     let currentTopTrack = result.items[0];
     return vk.method('audio.reorder', { audio_id: selected.aid, before: currentTopTrack.aid });
   });
+};
+
+export let detectUrlType = (url) => {
+  let match = null;
+
+  let album = /.*vk.com\/audios([-\d]+)\?album_id=([\d]+)/;
+  match = album.exec(url);
+  if (match) {
+    return Promise.resolve({
+      type: 'audio',
+      owner_id: match[1],
+      album_id: match[2]
+    });
+  }
+
+  let wall = /.*vk.com\/wall([\S]+)/;
+  match = wall.exec(url);
+  if (match) {
+    return Promise.resolve({
+      type: 'wall',
+      id: match[1]
+    });
+  }
+
+  let community = /.*vk.com\/([\S]+)/;
+  match = community.exec(url);
+  if (match) {
+    return vk.method('utils.resolveScreenName', { screen_name: match[1] }).then((response) => {
+      return {
+        type: 'audio',
+        owner_id: (response.type === 'group' ? '-' : '') + response.object_id
+      };
+    });
+  }
 };
