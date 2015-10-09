@@ -20,11 +20,16 @@ export default (screen, items) => {
   list.setItems(items);
   list.focus();
 
+  let keepFocus = () => list.focus();
+  list.on('blur', keepFocus);
+
   screen.render();
 
   return new Promise((resolve, reject) => {
     list.on('select', (item, index) => {
+      list.removeListener('blur', keepFocus);
       screen.remove(list);
+      
       resolve(index);
     });
   });
