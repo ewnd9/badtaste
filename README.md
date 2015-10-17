@@ -32,7 +32,9 @@
 ## Install
 
 ```
+# if you are on linux
 $ sudo apt-get install libasound2-dev
+
 $ npm install -g badtaste
 ```
 
