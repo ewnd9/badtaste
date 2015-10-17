@@ -15,15 +15,17 @@ export default (screen) => {
   });
 
   var box = blessed.textarea({
+    inputOnFocus: true,
     style: {
       bg: 'black'
     },
-    height: '100%-5'
+    keys: true,
+    height: '100%-6'
   });
 
   var text = blessed.text({
-    content: 'Press i, then paste tracklist, then press esc, then press enter',
-    top: '100%-4',
+    content: 'Paste tracklist, press esc.\nUnfortunately there is large input lag before text is actually pasted in form, don\'t close it',
+    top: '100%-6',
     align: 'middle'
   });
 
@@ -36,9 +38,11 @@ export default (screen) => {
     box.readInput(function() {});
   });
 
+  screen.render();
+
   return new Promise((resolve, reject) => {
-    screen.key('enter', function() {
-      layout.detach();
+    box.on('blur', () => {
+      screen.remove(layout);
       resolve(box.value);
     });
   });

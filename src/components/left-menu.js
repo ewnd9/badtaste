@@ -60,7 +60,7 @@ let vkMenu = () => {
     fn: searchFn
   },
   {
-    name: '{bold}VK{/bold} Batch search',
+    name: '{bold}VK{/bold} Tracklist search',
     fn: () => TracklistPrompt(screen).then((text) => {
       emitVkAudio({ type: 'tracklist', tracklist: text });
     })
@@ -99,7 +99,7 @@ let gmMenu = () => {
   if (!storage.gmHasData()) {
     return [];
   }
-  
+
   let gmLinks = storage.data.gmLinks;
 
   return [{
