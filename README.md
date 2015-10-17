@@ -1,35 +1,33 @@
 # badtaste
 
-> Listen music from filesystem and [vk.com](http://vk.com/) in your terminal
+> Terminal player with filesystem, [google music](https://play.google.com/music/) and [vk.com](http://vk.com/) support
 
-![Demonstration](/media/screenshot.png?raw=true)
+[![asciicast](https://asciinema.org/a/1proyy66zkdnjtbu3rslixdsz.png??theme=solarized-dark)](https://asciinema.org/a/1proyy66zkdnjtbu3rslixdsz)
 
-### You can
+### Features
 
-- Listen music
+- VK: Add tracks to your profile, or move it on top of list if already added
 
-- Search music
+- VK: Add links to your favorite communities, wall posts, friend's audio and playlists to have fast access
 
-- Add tracks to your profile, or move it on top of list if already added
+- Google Music: Add links to your favorite albums
 
-- Add links to your favorite communities to have fast access
-
-### Caveats
-
-- Only play/stop, pause is not implemented yet
+- Filesystem: Add links to your favorite albums
 
 ### Controls
 
 - `ctrl-f` search in vk.com
 - `space` play/stop
-- `x` add track to vk.com profile audio
 - `m` switch focused pane
 
 - `d` select playing track
 - `g` move to the beginning of list
 - `G` move to the end of list
-
 - `q` exit
+
+### VK
+
+- `x` add track to vk.com profile audio
 
 ## Install
 
@@ -44,7 +42,7 @@ $ npm install -g badtaste
 $ badtaste # press '?' inside to get help
 ```
 
-## Similar
+## Alternatives
 
 - https://www.npmjs.com/package/vknplayer
 - https://www.npmjs.com/package/djesbe
