@@ -18,12 +18,13 @@ export default (force) => {
 		return result;
 	};
 
-	vkCredentials.init();
-	gmCredentials.init();
+	return gmCredentials.init().then(() => {
+		vkCredentials.init();
 
-	if (!force && (vkCredentials.hasData() || gmCredentials.hasData())) {
-		return Promise.resolve(true);
-	} else {
-		return menu(createMenu);
-	}
+		if (!force && (vkCredentials.hasData() || gmCredentials.hasData())) {
+			return Promise.resolve(true);
+		} else {
+			return menu(createMenu);
+		}
+	});
 };

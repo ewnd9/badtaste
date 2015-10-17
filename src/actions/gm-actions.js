@@ -2,7 +2,7 @@ import PlayMusic from 'playmusic';
 import Promise from 'bluebird';
 import { format } from './music-actions';
 
-let pm = new PlayMusic();
+export let pm = new PlayMusic();
 
 export let setCredentials = (email, password) => {
 	return new Promise((resolve, reject) => {
