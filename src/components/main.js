@@ -1,4 +1,4 @@
-import storage, { PLAY, SHOW_HELP, SWITCH_PANE, FOCUS_LEFT_PANE, FOCUS_RIGHT_PANE } from './../storage';
+import storage, { PAUSE, SHOW_HELP, SWITCH_PANE, FOCUS_LEFT_PANE, FOCUS_RIGHT_PANE } from './../storage';
 
 import HelpBox from './../tui/help-box';
 
@@ -27,17 +27,7 @@ export default (_screen) => {
   storage.emit(FOCUS_RIGHT_PANE);
 };
 
-var isPlaying = true;
-storage.on(PLAY, () => {
-  if (isPlaying) {
-    player.stop();
-  } else {
-    player.play(playlist.getCurrent());
-  }
-
-  isPlaying = !isPlaying;
-});
-
+storage.on(PAUSE, () => player.pause());
 storage.on(SHOW_HELP, () => HelpBox(screen));
 
 let focusPane = (pane1, pane2) => {

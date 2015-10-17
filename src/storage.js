@@ -16,7 +16,7 @@ storage.on = emitter.on.bind(emitter);
 
 export const OPEN_VK = 'OPEN_VK';
 export const SEARCH_VK = 'SEARCH_VK';
-export const PLAY = 'PLAY';
+export const PAUSE = 'PAUSE';
 export const ADD_TO_PROFILE = 'ADD_TO_PROFILE';
 export const SWITCH_PANE = 'SWITCH_PANE';
 export const FOCUS_LEFT_PANE = 'FOCUS_LEFT_PANE';

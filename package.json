@@ -36,7 +36,7 @@
     "inquirer-question": "^1.1.1",
     "lodash": "^3.10.1",
     "meow": "^3.4.1",
-    "player": "git://github.com/ewnd9/player.git#4dad1193ec2765db229dc174a43ef387ccf3b01a",
+    "player": "git://github.com/ewnd9/player.git#600fce7cacc5276e0b9fa1b34674681aca94c677",
     "playmusic": "^2.0.3",
     "split-tracklist": "^1.1.1",
     "vk-universal-api": "0.0.2",

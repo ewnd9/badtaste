@@ -51,8 +51,8 @@ export let play = (url) => {
   }, 10);
 };
 
-export let stop = (url) => {
-  killPlayer();
+export let pause = () => {
+  x.p.stdin.write('pause');
 };
 
 export let setOnNextSong = (callback) => onNextSong = callback;

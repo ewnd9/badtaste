@@ -1,20 +1,26 @@
 var Player = require('player');
+var player = null;
 
 process.stdin.on('data', function(chunk) {
-  var url = chunk.toString().trim();
-  var player = new Player([]);
+  var line = chunk.toString().trim();
 
-  player.add(url);
-  player.play();
+  if (line === 'pause') {
+    player.pause();
+  } else {
+    player = new Player([]);
 
-  player.on('playend',function(data) {
-    process.exit(0);
-  });
+    player.add(line);
+    player.play();
 
-  player.on('error', function(err) {
-    process.stderr.write(err);
-    process.exit(1);
-  });
+    // player.on('playend',function(data) {
+    //   process.exit(0);
+    // });
+
+    player.on('error', function(err) {
+      process.stderr.write(err);
+      process.exit(1);
+    });
+  }
 });
 
 process.once('SIGTERM', function () {
