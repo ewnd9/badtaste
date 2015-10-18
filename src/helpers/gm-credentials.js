@@ -1,5 +1,6 @@
 import inquirer from 'inquirer-question';
 import storage from './../storage';
+import Promise from 'bluebird';
 
 import * as gmActions from './../actions/gm-actions';
 
@@ -16,7 +17,7 @@ let password = {
 };
 
 export let hasData = () => typeof storage.data.googleEmail !== 'undefined';
-export let init = () => hasData() ? gmActions.setCredentials(storage.data.googleEmail, storage.data.googlePassword) : undefined;
+export let init = () => hasData() ? gmActions.setCredentials(storage.data.googleEmail, storage.data.googlePassword) : Promise.resolve(true);
 export let getUser = () => storage.data.googleEmail;
 
 storage.gmHasData = hasData;
