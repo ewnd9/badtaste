@@ -11,6 +11,7 @@ import _ from 'lodash';
 
 import LoadingSpinner from './../tui/loading-spinner';
 import InfoBox from './../tui/info-box';
+import Toast from './../tui/toast';
 
 import Promise from 'bluebird';
 
@@ -156,5 +157,11 @@ storage.on(MOVE_TO_PLAYING, (data) => {
 storage.on(OPEN_GM_ALBUM, (data) => {
   gmActions.getAlbum(data.albumId).then((result) => {
     loadAudio(result);
+  }).catch((err) => {
+    Logger.error(err);
+
+    if (err.message === 'error getting album tracks: Error: 401 error from server') {
+      Toast(screen, 'Auth error');
+    }
   });
 });

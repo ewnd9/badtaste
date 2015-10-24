@@ -108,25 +108,31 @@ let gmMenu = () => {
       let labels = gmLinks.map(link => link.name);
       selectOrSearch(labels, (i) => storage.emit(OPEN_GM_ALBUM, gmLinks[i].data), () => {
         prompt(screen, 'Google Music', 'Search').then((query) => {
-          gmActions.findAlbum(query).then((result) => {
-            let labels = result.map((entry) => `${entry.album.artist} - ${entry.album.name}`);
-            SelectList(screen, labels).then((index) => {
-              let payload = { albumId: result[index].album.albumId };
+          return gmActions.findAlbum(query);
+        }).then((result) => {
+          let labels = result.map((entry) => `${entry.album.artist} - ${entry.album.name}`);
+          return SelectList(screen, labels).then((index) => {
+            let payload = { albumId: result[index].album.albumId };
 
-              storage.data.gmLinks.unshift({
-                data: payload,
-                name: labels[index]
-              });
-              storage.save();
-
-              renderLeftPane();
-
-              leftPane.focus();
-              screen.render();
-
-              storage.emit(OPEN_GM_ALBUM, payload);
+            storage.data.gmLinks.unshift({
+              data: payload,
+              name: labels[index]
             });
+            storage.save();
+
+            renderLeftPane();
+
+            leftPane.focus();
+            screen.render();
+
+            storage.emit(OPEN_GM_ALBUM, payload);
           });
+        }).catch((err) => {
+          Logger.error(err);
+
+          if (err.message === 'error getting album tracks: Error: 401 error from server') {
+            Toast(screen, 'Auth error');
+          }
         });
       });
     }

@@ -27,6 +27,10 @@ export let getUrl = (track) => {
 export let getAlbum = (albumId) => {
 	return new Promise((resolve, reject) => {
 		pm.getAlbum(albumId, true, (err, fullAlbumDetails) => {
+			if (err) {
+				reject(err);
+				return;
+			}
 			let result = fullAlbumDetails.tracks.map((track) => {
 				return {
 					artist: track.artist,
