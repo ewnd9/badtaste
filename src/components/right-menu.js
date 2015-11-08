@@ -81,6 +81,8 @@ storage.on(OPEN_VK, (payload) => {
     vkActions.getWallAudio(payload.id).then(loadAudio).catch((err) => Logger.error(err));
   } else if (payload.type === 'search') {
     vkActions.getSearch(payload.query).then(loadAudio).catch((err) => Logger.error(err));
+  } else if (payload.type === 'recommendations') {
+    vkActions.getRecommendations().then(loadAudio).catch((err) => Logger.error(err));
   } else if (payload.type === 'tracklist') {
     setListElements([]);
     playlist.setPlaylist([]);

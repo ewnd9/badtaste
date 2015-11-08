@@ -56,6 +56,10 @@ let vkMenu = () => {
     fn: () => emitVkAudio({ type: 'profile' })
   },
   {
+    name: '{bold}VK{/bold} Recommendations',
+    fn: () => emitVkAudio({ type: 'recommendations' })
+  },
+  {
     name: '{bold}VK{/bold} Search',
     fn: searchFn
   },

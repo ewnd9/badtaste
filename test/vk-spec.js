@@ -33,4 +33,11 @@ describe('vkSpec', () => {
     });
   });
 
+  it('recommendations', (done) => {
+    vk.getRecommendations().then((result) => {
+      expect(result.length).to.equal(99);
+      done();
+    });
+  });
+
 });
