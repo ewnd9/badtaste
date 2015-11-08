@@ -40,6 +40,7 @@
     "player": "git://github.com/ewnd9/player.git#600fce7cacc5276e0b9fa1b34674681aca94c677",
     "playmusic": "^2.0.3",
     "split-tracklist": "^1.1.1",
+    "update-notifier": "^0.5.0",
     "vk-universal-api": "0.0.2"
   },
   "devDependencies": {
