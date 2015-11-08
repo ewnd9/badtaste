@@ -40,4 +40,11 @@ describe('vkSpec', () => {
     });
   });
 
+  it('albums list', (done) => {
+    vk.getAlbums().then((result) => {
+      expect(result.length).to.equal(23);
+      done();
+    });
+  });
+
 });

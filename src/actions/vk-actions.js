@@ -51,6 +51,10 @@ export let getRecommendations = () => {
   return vk.method('audio.getRecommendations').then((response) => handleData(response.items));
 };
 
+export let getAlbums = () => {
+  return vk.method('audio.getAlbums').then((response) => response.items);
+};
+
 export let getSearch = (query) => {
   let request = vk.method('audio.search', { need_user: 1, count: count, offset: offset * count, q: query });
   return request.then(response => handleData(response.items));

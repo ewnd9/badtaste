@@ -60,6 +60,18 @@ let vkMenu = () => {
     fn: () => emitVkAudio({ type: 'recommendations' })
   },
   {
+    name: '{bold}VK{/bold} Playlists',
+    fn: () => {
+      vkActions.getAlbums().then((albums) => {
+        Logger.info(albums);
+        return SelectList(screen, albums.map((album) => album.title)).then((index) => {
+          let album = albums[index];
+          return emitVkAudio({ type: 'audio', owner_id: album.owner_id, album_id: album.album_id });
+        });
+      }).catch((err) => Logger.error(err));
+    }
+  },
+  {
     name: '{bold}VK{/bold} Search',
     fn: searchFn
   },
