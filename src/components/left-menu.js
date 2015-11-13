@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import storage, { OPEN_VK, SEARCH_VK, OPEN_FS, OPEN_GM_ALBUM } from './../storage';
+import storage, { OPEN_VK, SEARCH_VK, OPEN_FS, OPEN_GM_ALBUM, OPEN_GM_THUMBS_UP } from './../storage';
 import { prompt, urlPrompt, vkSearchPrompt } from './../prompts/vk-prompts';
 
 import TracklistPrompt from './../tui/tracklist-prompt';
@@ -118,7 +118,12 @@ let gmMenu = () => {
 
   let gmLinks = storage.data.gmLinks;
 
-  return [{
+  return [
+    {
+      name: '{bold}GM{/bold} Thumbs up',
+      fn: () => storage.emit(OPEN_GM_THUMBS_UP)
+    },
+    {
     name: nameWithCount('{bold}GM{/bold} Play album', gmLinks),
     fn: () => {
       let labels = gmLinks.map(link => link.name);

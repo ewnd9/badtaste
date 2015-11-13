@@ -10,9 +10,20 @@ describe('gmSpec', () => {
 		this.timeout(10000);
 		boot().then(() => {
 			pm.getPlayLists(function(err, data) {
-	      console.log(JSON.stringify(data, null, 2));
+	      console.log(data.data);
+				console.log(Object.keys(data));
 				done();
 	    });
+		});
+  });
+
+  it('thumbs up', function(done) {
+		this.timeout(10000);
+		boot().then(() => {
+			pm.getFavotites(function(err, data) {
+				console.log(data.track[0]);
+				done();
+			});
 		});
   });
 

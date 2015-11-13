@@ -14,7 +14,7 @@ export let setCredentials = (email, password) => {
 
 export let getUrl = (track) => {
 	return new Promise((resolve, reject) => {
-		pm.getStreamUrl(track.nid, (err, result) => {
+		pm.getStreamUrl(track.id || track.nid, (err, result) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -24,6 +24,18 @@ export let getUrl = (track) => {
 	});
 };
 
+let processTracks = (tracks) => {
+	let result = tracks.map((track) => {
+		return {
+			artist: track.artist,
+			title: track.title,
+			url: () => getUrl(track)
+		};
+	});
+
+	return format(result);
+};
+
 export let getAlbum = (albumId) => {
 	return new Promise((resolve, reject) => {
 		pm.getAlbum(albumId, true, (err, fullAlbumDetails) => {
@@ -31,14 +43,8 @@ export let getAlbum = (albumId) => {
 				reject(err);
 				return;
 			}
-			let result = fullAlbumDetails.tracks.map((track) => {
-				return {
-					artist: track.artist,
-					title: track.title,
-					url: () => getUrl(track)
-				};
-			});
-			resolve(format(result));
+
+			resolve(processTracks(fullAlbumDetails.tracks));
 		});
 	});
 };
@@ -54,3 +60,16 @@ export let findAlbum = (query) => {
 		});
 	});
 };
+
+export let getThumbsUp = () => {
+	return new Promise((resolve, reject) => {
+		pm.getFavotites(function(err, data) {
+			if (err) {
+				reject(err);
+				return;
+			}
+
+			resolve(processTracks(data.track));
+		});
+	});
+}
