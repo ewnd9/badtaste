@@ -33,6 +33,7 @@ export default (screen) => {
   layout.append(box, 5);
 
   box.focus();
+  box.on('action', () => screen.render());
 
   screen.key('i', function() {
     box.readInput(function() {});
