@@ -16,20 +16,40 @@ export default (screen, items) => {
   });
 
   screen.append(list);
+  screen.saveFocus();
 
   list.setItems(items);
   list.focus();
 
+  screen.render();
+
   let keepFocus = () => list.focus();
   list.on('blur', keepFocus);
 
-  screen.render();
+  let done = () => {
+    list.removeListener('blur', keepFocus);
+    list.removeScreenEvent('keypress', press);
+
+    screen.remove(list);
+    screen.restoreFocus();
+    screen.render();
+
+    setTimeout(() => screen.blockEsc = false, 1000);
+  };
+
+  let press = (ch, key) => {
+    if (key.name === 'escape') {
+      done();
+      return;
+    }
+  };
+  list.onScreenEvent('keypress', press);
+
+  screen.blockEsc = true;
 
   return new Promise((resolve, reject) => {
     list.on('select', (item, index) => {
-      list.removeListener('blur', keepFocus);
-      screen.remove(list);
-      
+      done();
       resolve(index);
     });
   });

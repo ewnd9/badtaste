@@ -41,7 +41,7 @@ let selectOrSearch = (labels, onLabel, onSearch) => {
     } else {
       onLabel(index - 1);
     }
-  });
+  }, () => console.log('SelectList closed by esc'));
 };
 
 let vkMenu = () => {
@@ -86,7 +86,15 @@ let vkMenu = () => {
     fn: () => {
       let labels = vkLinks.map(link => link.name);
       selectOrSearch(labels, (i) => emitVkAudio(vkLinks[i].data), () => {
-        urlPrompt(screen, 'Enter url', 'Enter alias for menu').then((promptResult) => {
+        let urlsExamples = [
+          'Enter url like:',
+          '',
+          'vk.com/audios1?album_id=1',
+          'vk.com/wall1',
+          'vk.com/user1'
+        ];
+
+        urlPrompt(screen, urlsExamples, 'Enter alias for menu').then((promptResult) => {
           vkActions.detectUrlType(promptResult.url).then((data) => {
             if (data) {
               storage.data.vkLinks.unshift({
