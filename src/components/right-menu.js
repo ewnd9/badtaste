@@ -23,7 +23,10 @@ let playCurrent = () => {
 
   while (!urlFinded) {
     let url = playlist.getCurrent();
-
+    if (url === "#undefined") {
+      urlFinded = true;
+      break;
+    }
     if (url) {
       (typeof url === 'function' ? url() : Promise.resolve(url)).then((url) => {
         player.play(url);
@@ -46,7 +49,7 @@ export default (_screen, _rightPane) => {
   screen = _screen;
   rightPane = _rightPane;
 
-  rightPane.on('select', function(item, index) {
+  rightPane.on('select', function (item, index) {
     playlist.setCurrent(index);
     playCurrent();
   });
@@ -93,7 +96,7 @@ storage.on(OPEN_VK, (payload) => {
       storage.emit(FOCUS_RIGHT_PANE);
 
       playlist.push(track);
-      spinner.setContent(`${index  + 1} / ${length}. press z to cancel`);
+      spinner.setContent(`${index + 1} / ${length}. press z to cancel`);
     };
 
     vkActions.getBatchSearch(payload.tracklist, onTrack).then(() => {
