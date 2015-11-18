@@ -18,7 +18,7 @@ describe('gmSpec', () => {
   });
 
   it('thumbs up', function(done) {
-		this.timeout(10000);
+		this.timeout(100000);
 		boot().then(() => {
 			pm.getFavotites(function(err, data) {
 				console.log(data.track[0]);

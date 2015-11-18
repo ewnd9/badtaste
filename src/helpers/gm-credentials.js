@@ -16,8 +16,8 @@ let password = {
   type: 'input'
 };
 
-export let hasData = () => typeof storage.data.googleEmail !== 'undefined';
-export let init = () => hasData() ? gmActions.setCredentials(storage.data.googleEmail, storage.data.googlePassword) : Promise.resolve(true);
+export let hasData = () => typeof storage.data.googleToken !== 'undefined';
+export let init = () => hasData() ? gmActions.setCredentials(storage.data.googleToken) : Promise.resolve(true);
 export let getUser = () => storage.data.googleEmail;
 
 storage.gmHasData = hasData;
@@ -25,7 +25,13 @@ storage.gmHasData = hasData;
 export let dialog = () => {
   return inquirer.prompt([email, password]).then((credentials) => {
     storage.data.googleEmail = credentials.googleEmail;
-    storage.data.googlePassword = credentials.googlePassword;
+
+    return gmActions.getToken({
+      email: credentials.googleEmail,
+      password: credentials.googlePassword
+    });
+  }).then((token) => {
+    storage.data.googleToken = token;
     storage.save();
 
     init();
