@@ -8,6 +8,7 @@ export default {
   },
   push: (track) => playlist.push(track),
   get: (index) => playlist[index],
+  getLength: () => playlist.length,
   getCurrent: () => playlist[current % playlist.length].url,
   getCurrentItem: () => playlist[current % playlist.length],
   getCurrentIndex: () => current,
