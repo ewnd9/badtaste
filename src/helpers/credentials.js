@@ -24,7 +24,7 @@ export default (force) => {
 		if (!force && (vkCredentials.hasData() || gmCredentials.hasData())) {
 			return Promise.resolve(true);
 		} else {
-			return menu(createMenu);
+			return menu(createMenu).then(() => process.exit(0));
 		}
 	});
 };
