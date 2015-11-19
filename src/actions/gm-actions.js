@@ -9,7 +9,7 @@ export let setCredentials = (credentials) => {
 };
 
 export let getUrl = (track) => {
-	return pm.getStreamUrlAsync(track.nid || track.id);
+	return pm.getStreamUrlAsync(track.id || track.nid);
 };
 
 let processTracks = (tracks) => {
