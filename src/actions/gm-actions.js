@@ -42,6 +42,12 @@ export let getThumbsUp = () => {
 	});
 };
 
+export let getAllTracks = () => {
+	return pm.getAllTracksAsync().then((data) => {
+		return processTracks(data.data.items);
+	});
+};
+
 export let getToken = (credentials) => {
 	return pm.loginAsync(credentials);
 };

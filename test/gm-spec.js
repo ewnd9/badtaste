@@ -27,4 +27,14 @@ describe('gmSpec', () => {
 		});
   });
 
+  it('all tracks', function(done) {
+		this.timeout(100000);
+		boot().then(() => {
+			pm.getAllTracks(function(err, data) {
+				console.log(Object.keys(data.data.items[0]));
+				done();
+			});
+		});
+  });
+
 });
