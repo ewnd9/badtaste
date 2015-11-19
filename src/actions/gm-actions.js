@@ -45,3 +45,5 @@ export let getThumbsUp = () => {
 export let getToken = (credentials) => {
 	return pm.loginAsync(credentials);
 };
+
+export let isAllAccess = () => pm._allAccess;
