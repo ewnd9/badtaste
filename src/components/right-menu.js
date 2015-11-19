@@ -1,4 +1,4 @@
-import storage, { OPEN_VK, ADD_TO_PROFILE, OPEN_FS, FOCUS_RIGHT_PANE, MOVE_TO_PLAYING, OPEN_GM_ALBUM, OPEN_GM_THUMBS_UP, OPEN_GM_ALL_TRACKS } from './../storage';
+import storage, { OPEN_VK, ADD_TO_PROFILE, OPEN_FS, FOCUS_RIGHT_PANE, MOVE_TO_PLAYING, OPEN_GM_ALBUM, OPEN_GM_THUMBS_UP, OPEN_GM_ALL_TRACKS, LOCAL_SEARCH } from './../storage';
 
 import * as vkActions from './../actions/vk-actions';
 import * as fsActions from './../actions/fs-actions';
@@ -12,6 +12,7 @@ import _ from 'lodash';
 import LoadingSpinner from './../tui/loading-spinner';
 import InfoBox from './../tui/info-box';
 import Toast from './../tui/toast';
+import { prompt } from './../prompts/vk-prompts';
 
 import Promise from 'bluebird';
 
@@ -65,13 +66,26 @@ let setListElements = (elements) => {
   storage.emit(FOCUS_RIGHT_PANE);
 };
 
-let loadAudio = (audio) => {
+let setAudio = (audio) => {
   setListElements(_.pluck(audio, 'trackTitleFull'));
   storage.emit(FOCUS_RIGHT_PANE);
+};
+
+let loadAudio = (audio) => {
+  setAudio(audio);
 
   playlist.setPlaylist(audio);
   playCurrent();
 };
+
+storage.on(LOCAL_SEARCH, (data) => {
+  prompt(screen, 'Search', '').then((query) => {
+    setAudio(playlist.filter(query));
+    playlist.setCurrent(0);
+    
+    playCurrent();
+  });
+});
 
 storage.on(OPEN_VK, (payload) => {
   if (payload.type === 'profile') {

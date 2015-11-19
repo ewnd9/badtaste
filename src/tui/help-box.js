@@ -20,10 +20,12 @@ export default (screen) => {
   var lines = [];
   var addHotkey = (key, description) => lines.push(_.padRight(key, 8) + description);
 
-  addHotkey('ctrl-f', 'search');
+  addHotkey('f', 'local search');
   addHotkey('space', 'play/stop');
-  addHotkey('x', 'add track to profile audio');
   addHotkey('m', 'switch focused pane');
+
+  addHotkey('ctrl-f', 'VK: search');
+  addHotkey('x', 'VK: add track to profile audio');
 
   lines.push('');
 

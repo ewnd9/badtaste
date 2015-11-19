@@ -16,9 +16,9 @@
 
 ### Controls
 
-- `ctrl-f` search in vk.com
+- `f` local search
 - `space` play/stop
-- `m` switch focused pane
+- `left` and `right` - focus left or right pane
 
 - `d` select playing track
 - `g` move to the beginning of list

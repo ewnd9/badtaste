@@ -26,5 +26,6 @@ export const OPEN_FS = 'OPEN_FS';
 export const OPEN_GM_ALBUM = 'OPEN_GM_ALBUM';
 export const OPEN_GM_THUMBS_UP = 'OPEN_GM_THUMBS_UP';
 export const OPEN_GM_ALL_TRACKS = 'OPEN_GM_ALL_TRACKS';
+export const LOCAL_SEARCH = 'LOCAL_SEARCH';
 
 export default storage;
