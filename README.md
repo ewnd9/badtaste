@@ -32,10 +32,13 @@
 ## Install
 
 ```
-# if you are on linux
-$ sudo apt-get install libasound2-dev
-
 $ npm install -g badtaste
+```
+
+### Linux prerequisites
+
+```
+$ sudo apt-get install libasound2-dev
 ```
 
 ## Usage
@@ -44,10 +47,19 @@ $ npm install -g badtaste
 $ badtaste # press '?' inside to get help
 ```
 
-## Alternatives
+## Related
 
-- https://www.npmjs.com/package/vknplayer
-- https://www.npmjs.com/package/djesbe
+- [mu-player](https://www.npmjs.com/package/mu-player) - Play audio from vk.com and soundcloud.com via mpd (fork of badtaste)
+
+- [vknplayer](https://www.npmjs.com/package/vknplayer) - Console audio player for listen music from vk.com and on-line radio
+
+- [djesbe](https://www.npmjs.com/package/djesbe) - A terminal based audio player
+
+- [nodeplayer](https://www.npmjs.com/package/nodeplayer) - Simple, modular ([google music](https://www.npmjs.com/package/nodeplayer-backend-gmusic), [youtube](https://www.npmjs.com/package/nodeplayer-backend-youtube), [spotify](https://www.npmjs.com/package/nodeplayer-backend-spotify), [fs](https://www.npmjs.com/package/nodeplayer-backend-file)) music player written in node.js
+
+- [gmplayer](https://www.npmjs.com/package/gmplayer) - A CLI music player using Google Play Music as a source
+
+- [yplayer](https://www.npmjs.com/package/yplayer) - Listen to/watch youtube videos from the CLI!
 
 ## License
 
