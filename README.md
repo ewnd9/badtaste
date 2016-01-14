@@ -49,6 +49,8 @@ $ badtaste # press '?' inside to get help
 
 ## Related
 
+### node-based
+
 - [mu-player](https://www.npmjs.com/package/mu-player) - Play audio from vk.com and soundcloud.com via mpd (fork of badtaste)
 
 - [vknplayer](https://www.npmjs.com/package/vknplayer) - Console audio player for listen music from vk.com and on-line radio
@@ -60,6 +62,10 @@ $ badtaste # press '?' inside to get help
 - [gmplayer](https://www.npmjs.com/package/gmplayer) - A CLI music player using Google Play Music as a source
 
 - [yplayer](https://www.npmjs.com/package/yplayer) - Listen to/watch youtube videos from the CLI!
+
+### ruby-based
+
+- [soundcloud2000](https://github.com/grobie/soundcloud2000) SoundCloud without the stupid css files
 
 ## License
 
