@@ -22,7 +22,7 @@ import _ from 'lodash';
 import LoadingSpinner from './loading-spinner';
 import InfoBox from './info-box';
 import Toast from './toast';
-import { prompt } from './../prompts/vk-prompts';
+import { prompt } from './vk-prompts';
 
 import Promise from 'bluebird';
 

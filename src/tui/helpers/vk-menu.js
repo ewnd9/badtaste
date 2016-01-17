@@ -1,4 +1,4 @@
-import { urlPrompt, vkSearchPrompt } from './../../prompts/vk-prompts';
+import { urlPrompt, vkSearchPrompt } from './../vk-prompts';
 import { nameWithCount, selectOrSearch } from './menu';
 import * as vkActions from './../../actions/vk-actions';
 
