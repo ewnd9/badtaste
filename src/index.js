@@ -31,12 +31,6 @@ setupCredentials(cli.flags.setup).then(() => {
 
   screen.key(['/', '?', '.', ','], () => storage.emit(SHOW_HELP));
 
-  screen.key(['escape', 'q', 'C-c'], () => {
-    if (!screen.blockEsc) {
-      process.exit(0);
-    }
-  });
-
   screen.title = 'badtaste';
   screen.render();
 

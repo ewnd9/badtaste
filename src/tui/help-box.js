@@ -2,23 +2,13 @@ import blessed from 'blessed';
 import _ from 'lodash';
 import storage from './../storage';
 
-export default (screen) => {
-  var msg = blessed.message({
-    parent: screen,
-    border: 'line',
-    height: 'shrink',
-    width: 'half',
-    top: 'center',
-    left: 'center',
-    label: ' {blue-fg}Help{/blue-fg}',
-    tags: true,
-    keys: true,
-    hidden: true,
-    vi: true
-  });
+import { HelpBox } from './components/help-box-components';
 
-  var lines = [];
-  var addHotkey = (key, description) => lines.push(_.padRight(key, 8) + description);
+export default (screen) => {
+  const msg = HelpBox(screen);
+
+  const lines = [];
+  const addHotkey = (key, description) => lines.push(_.padRight(key, 8) + description);
 
   addHotkey('f', 'local search');
   addHotkey('space', 'play/stop');

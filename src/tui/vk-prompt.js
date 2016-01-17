@@ -2,7 +2,7 @@ import blessed from 'blessed';
 import * as vk from 'vk-universal-api';
 
 export default (screen, cb) => {
-  let prompt = blessed.prompt({
+  const prompt = blessed.prompt({
     parent: screen,
     border: 'line',
     height: 'shrink',
@@ -17,9 +17,9 @@ export default (screen, cb) => {
   });
 
   prompt.input('insert vk user or community url', '', (err, value) => {
-    var alias = value.split('vk.com/')[1];
+    const alias = value.split('vk.com/')[1];
     return vk.method('utils.resolveScreenName', { screen_name: alias }).then((apiResponse) => {
-      var id = (apiResponse.type === 'group' ? '-' : '') + apiResponse.object_id;
+      const id = (apiResponse.type === 'group' ? '-' : '') + apiResponse.object_id;
       cb(id);
     }).catch(Logger.error.bind(Logger));
   });

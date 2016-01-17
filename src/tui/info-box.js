@@ -1,7 +1,7 @@
 import blessed from 'blessed';
 
 export default (screen, message) => {
-  var msg = blessed.message({
+  const msg = blessed.message({
     parent: screen,
     border: 'line',
     height: 'shrink',

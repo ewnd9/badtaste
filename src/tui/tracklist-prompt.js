@@ -1,33 +1,12 @@
 import blessed from 'blessed';
 import Promise from 'bluebird';
 
+import { Layout, TextArea, Text } from './components/tracklist-prompt-components';
+
 export default (screen) => {
-  var layout = blessed.box({
-    parent: screen,
-    top: 'center',
-    left: 'center',
-    width: '50%',
-    height: '50%',
-    tags: true,
-    border: {
-      type: 'line'
-    }
-  });
-
-  var box = blessed.textarea({
-    inputOnFocus: true,
-    style: {
-      bg: 'black'
-    },
-    keys: true,
-    height: '100%-6'
-  });
-
-  var text = blessed.text({
-    content: 'Paste tracklist, press esc.\nUnfortunately there is large input lag before text is actually pasted in form, don\'t close it',
-    top: '100%-6',
-    align: 'middle'
-  });
+  const layout = Layout(screen);
+  const box = TextArea();
+  const text = Text();
 
   layout.append(text);
   layout.append(box, 5);

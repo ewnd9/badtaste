@@ -1,27 +1,11 @@
 import blessed from 'blessed';
-import style from './list-style';
+
+import { LeftPane } from './components/lists-components';
+import Line from './components/line';
 
 export default (parent) => {
-  let box = blessed.list({
-    ...style,
-    left: 0,
-    width: '30%',
-    items: ['Loading']
-  });
-
-  let line = blessed.line({
-    parent: parent,
-    type: 'line',
-    orientation: 'horizontal',
-    left: 1,
-    width: '30%-3',
-    top: 0,
-    style: {
-      fg: 'green'
-    }
-  });
-
-  parent.append(box);
+  const box = LeftPane(parent);
+  const line = Line(parent, { left: 1, width: '30%-3' });
 
   return {
     box,

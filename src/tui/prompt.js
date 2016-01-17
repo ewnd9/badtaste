@@ -1,7 +1,7 @@
 import blessed from 'blessed';
 
 export default (screen, label, question, cb) => {
-  let prompt = blessed.prompt({
+  const prompt = blessed.prompt({
     parent: screen,
     border: 'line',
     height: 'shrink',

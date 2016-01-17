@@ -1,7 +1,7 @@
 import blessed from 'blessed';
 
 export default (screen, message, lockKeys = true, label = ' {blue-fg}Loading{/blue-fg} ') => {
-  var loader = blessed.loading({
+  const loader = blessed.loading({
     parent: screen,
     border: 'line',
     height: 'shrink',
@@ -20,7 +20,7 @@ export default (screen, message, lockKeys = true, label = ' {blue-fg}Loading{/bl
   screen.lockKeys = lockKeys;
   screen.key(['z'], (ch, key) => loader.stop());
 
-  var superStop = loader.stop;
+  const superStop = loader.stop;
   loader.stop = () => {
     superStop.call(loader);
     screen.removeKey(['z'], (ch, key) => loader.stop());

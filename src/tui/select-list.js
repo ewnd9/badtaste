@@ -1,19 +1,10 @@
 import blessed from 'blessed';
-import style from './list-style';
-
 import Promise from 'bluebird';
 
+import { SelectList } from './components/lists-components';
+
 export default (screen, items) => {
-  let list = blessed.list({
-    ...style,
-    top: 'center',
-    left: 'center',
-    width: '50%',
-    height: '50%',
-    border: {
-      type: 'line'
-    }
-  });
+  const list = SelectList();
 
   screen.append(list);
   screen.saveFocus();
@@ -23,10 +14,10 @@ export default (screen, items) => {
 
   screen.render();
 
-  let keepFocus = () => list.focus();
+  const keepFocus = () => list.focus();
   list.on('blur', keepFocus);
 
-  let done = () => {
+  const done = () => {
     list.removeListener('blur', keepFocus);
     list.removeScreenEvent('keypress', press);
 
@@ -37,7 +28,7 @@ export default (screen, items) => {
     setTimeout(() => screen.blockEsc = false, 1000);
   };
 
-  let press = (ch, key) => {
+  const press = (ch, key) => {
     if (key.name === 'escape') {
       done();
       return;

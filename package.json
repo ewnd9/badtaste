@@ -37,7 +37,7 @@
     "intel": "^1.0.2",
     "lodash": "^3.10.1",
     "meow": "^3.4.1",
-    "player": "git://github.com/ewnd9/player.git#600fce7cacc5276e0b9fa1b34674681aca94c677",
+    "player": "^0.6.1",
     "playmusic": "^2.1.0",
     "split-tracklist": "^1.1.1",
     "update-notifier": "^0.5.0",
