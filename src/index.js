@@ -1,6 +1,6 @@
 import tui from './tui/screen';
 import setupCredentials from './helpers/credentials';
-import startApp from './components/main';
+import startApp from './tui/main';
 import meow from 'meow';
 
 import storage, { SEARCH_VK, PAUSE, ADD_TO_PROFILE, SHOW_HELP, SWITCH_PANE, MOVE_TO_PLAYING, FOCUS_LEFT_PANE, FOCUS_RIGHT_PANE, LOCAL_SEARCH } from './storage';

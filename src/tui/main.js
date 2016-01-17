@@ -1,16 +1,16 @@
 import storage, { PAUSE, SHOW_HELP, SWITCH_PANE, FOCUS_LEFT_PANE, FOCUS_RIGHT_PANE } from './../storage';
 
-import HelpBox from './../tui/help-box';
+import HelpBox from './help-box';
 
-import LeftPane from './../tui/left-pane';
-import RightPane from './../tui/right-pane';
+import { LeftPane, RightPane } from './components/lists-components';
+import Line from './components/line';
 
 import LeftMenu from './left-menu';
 import RightMenu from './right-menu';
 
-let screen = null;
-let leftPane = null;
-let rightPane = null;
+let screen;
+let leftPane;
+let rightPane;
 
 import * as player from './../player/player-control';
 import playlist from './../playlist';
@@ -18,8 +18,15 @@ import playlist from './../playlist';
 export default (_screen) => {
   screen = _screen;
 
-  leftPane = new LeftPane(screen);
-  rightPane = new RightPane(screen);
+  leftPane = {
+    box: LeftPane(screen),
+    line: Line(screen, { left: 1, width: '30%-3' })
+  };
+
+  rightPane = {
+    box: RightPane(screen),
+    line: Line(screen, { left: '30%+1', width: '70%-3' })
+  };
 
   LeftMenu(screen, leftPane.box);
   RightMenu(screen, rightPane.box);
@@ -30,7 +37,7 @@ export default (_screen) => {
 storage.on(PAUSE, () => player.pause());
 storage.on(SHOW_HELP, () => HelpBox(screen));
 
-let focusPane = (pane1, pane2) => {
+const focusPane = (pane1, pane2) => {
   pane1.line.show();
   pane1.box.focus();
 

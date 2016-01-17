@@ -1,4 +1,14 @@
-import storage, { OPEN_VK, ADD_TO_PROFILE, OPEN_FS, FOCUS_RIGHT_PANE, MOVE_TO_PLAYING, OPEN_GM_ALBUM, OPEN_GM_THUMBS_UP, OPEN_GM_ALL_TRACKS, LOCAL_SEARCH } from './../storage';
+import storage, {
+  OPEN_VK,
+  ADD_TO_PROFILE,
+  OPEN_FS,
+  FOCUS_RIGHT_PANE,
+  MOVE_TO_PLAYING,
+  OPEN_GM_ALBUM,
+  OPEN_GM_THUMBS_UP,
+  OPEN_GM_ALL_TRACKS,
+  LOCAL_SEARCH
+} from './../storage';
 
 import * as vkActions from './../actions/vk-actions';
 import * as fsActions from './../actions/fs-actions';
@@ -9,9 +19,9 @@ import * as player from './../player/player-control';
 
 import _ from 'lodash';
 
-import LoadingSpinner from './../tui/loading-spinner';
-import InfoBox from './../tui/info-box';
-import Toast from './../tui/toast';
+import LoadingSpinner from './loading-spinner';
+import InfoBox from './info-box';
+import Toast from './toast';
 import { prompt } from './../prompts/vk-prompts';
 
 import Promise from 'bluebird';
@@ -82,7 +92,7 @@ storage.on(LOCAL_SEARCH, (data) => {
   prompt(screen, 'Search', '').then((query) => {
     setAudio(playlist.filter(query));
     playlist.setCurrent(0);
-    
+
     playCurrent();
   });
 });
