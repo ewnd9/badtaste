@@ -1,4 +1,5 @@
-import * as vk from 'vk-universal-api';
+import * as vkActions from './../actions/vk-actions';
+
 import inquirer from 'inquirer-question';
 
 import storage from './../storage';
@@ -20,7 +21,7 @@ let extractToken = (data) => {
 
 export let setupToken = (response) => {
   var token = extractToken(response);
-  vk.setToken(token);
+  vkActions.setToken(token);
 };
 
 export let hasData = () => typeof storage.data.vkToken !== 'undefined';
@@ -33,7 +34,7 @@ export let dialog = () => {
   return inquirer.prompt([token]).then((credentials) => {
     setupToken(credentials.url);
 
-    return vk.method('users.get').then((user) => {
+    return vkActions.getUserInfo().then((user) => {
       storage.data.vkUsername = user.meta.first_name + ' ' + user.meta.last_name;
       storage.data.vkToken = credentials.url;
 

@@ -139,3 +139,6 @@ export let detectUrlType = (url) => {
     });
   }
 };
+
+export const getUserInfo = () => vk.method('users.get');
+export const setToken = token => vk.setToken(token); 
