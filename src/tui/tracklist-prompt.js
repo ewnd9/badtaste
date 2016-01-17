@@ -1,12 +1,15 @@
-import blessed from 'blessed';
 import Promise from 'bluebird';
 
-import { Layout, TextArea, Text } from './components/tracklist-prompt-components';
+import Box from './components/box';
+import TextArea from './components/textarea';
+import Text from './components/text';
 
 export default (screen) => {
-  const layout = Layout(screen);
+  const layout = Box(screen, '50%', '50%');
   const box = TextArea();
-  const text = Text();
+
+  const textContent = 'Paste tracklist, press esc.\nUnfortunately there is large input lag before text is actually pasted in form, don\'t close it';
+  const text = Text(textContent, '100%-6');
 
   layout.append(text);
   layout.append(box, 5);

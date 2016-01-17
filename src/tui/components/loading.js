@@ -1,13 +1,13 @@
 import blessed from 'blessed';
 
-export const HelpBox = screen => blessed.message({
+export default (screen, label) => blessed.loading({
 	parent: screen,
 	border: 'line',
 	height: 'shrink',
 	width: 'half',
 	top: 'center',
 	left: 'center',
-	label: ' {blue-fg}Help{/blue-fg}',
+	label: label,
 	tags: true,
 	keys: true,
 	hidden: true,

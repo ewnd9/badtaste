@@ -1,10 +1,17 @@
-import blessed from 'blessed';
 import Promise from 'bluebird';
 
-import { SelectList } from './components/lists-components';
+import List from './components/list';
 
 export default (screen, items) => {
-  const list = SelectList();
+  const list = List(undefined, {
+  	top: 'center',
+  	left: 'center',
+  	width: '50%',
+  	height: '50%',
+  	border: {
+  		type: 'line'
+  	}
+  });
 
   screen.append(list);
   screen.saveFocus();

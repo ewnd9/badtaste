@@ -1,11 +1,10 @@
-import blessed from 'blessed';
 import _ from 'lodash';
 import storage from './../storage';
 
-import { HelpBox } from './components/help-box-components';
+import Message from './components/message';
 
 export default (screen) => {
-  const msg = HelpBox(screen);
+  const msg = Message(screen, ' {blue-fg}Help{/blue-fg}');
 
   const lines = [];
   const addHotkey = (key, description) => lines.push(_.padRight(key, 8) + description);

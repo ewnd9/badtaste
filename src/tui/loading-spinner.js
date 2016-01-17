@@ -1,20 +1,7 @@
-import blessed from 'blessed';
+import Loading from './components/loading';
 
 export default (screen, message, lockKeys = true, label = ' {blue-fg}Loading{/blue-fg} ') => {
-  const loader = blessed.loading({
-    parent: screen,
-    border: 'line',
-    height: 'shrink',
-    width: 'half',
-    top: 'center',
-    left: 'center',
-    label: label,
-    tags: true,
-    keys: true,
-    hidden: true,
-    vi: true
-  });
-
+  const loader = Loading(screen, label);
   loader.load(message);
 
   screen.lockKeys = lockKeys;

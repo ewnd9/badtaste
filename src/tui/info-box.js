@@ -1,20 +1,7 @@
-import blessed from 'blessed';
+import Message from './components/message';
 
 export default (screen, message) => {
-  const msg = blessed.message({
-    parent: screen,
-    border: 'line',
-    height: 'shrink',
-    width: 'half',
-    top: 'center',
-    left: 'center',
-    label: ' {blue-fg}Info{/blue-fg}',
-    tags: true,
-    keys: true,
-    hidden: true,
-    vi: true
-  });
-
+  const msg = Message(screen, ' {blue-fg}Info{/blue-fg}');
   msg.display(message, 1, function(err) {
     Logger.error(err);
   });

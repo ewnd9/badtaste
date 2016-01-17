@@ -1,7 +1,8 @@
-import _prompt from './../tui/prompt';
+import _prompt from './prompt';
 import Promise from 'bluebird';
-import blessed from 'blessed';
-import { Layout, TextBox } from './components/vk-prompts-components';
+
+import Box from './components/box';
+import TextBox from './components/textbox';
 
 const label = '{blue-fg}Question{/blue-fg}';
 
@@ -14,8 +15,8 @@ export const prompt = (screen, label, question) => {
 };
 
 export const customPrompt = (screen, lines) => {
-  const layout = Layout(screen, lines);
-  const input = TextBox(layout);
+  const layout = Box(screen, '70%', 4 + lines.length, lines.join('\n'));
+  const input = TextBox(layout, lines.length + 1, 1);
 
   input.focus();
 

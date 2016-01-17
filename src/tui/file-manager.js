@@ -1,15 +1,13 @@
 import Promise from 'bluebird';
 
-import {
-  Layout,
-  FileManager,
-  Text
-} from './components/file-manager-components';
+import FileManager from './components/file-manager';
+import Box from './components/box';
+import Text from './components/text';
 
 export default (screen) => {
-  const layout = Layout(screen);
+  const layout = Box(screen, '90%', '90%');
   const fm = FileManager();
-  const text = Text();
+  const text = Text('Press "s" to play directory', '100%-3');
 
   layout.append(fm);
   layout.append(text);

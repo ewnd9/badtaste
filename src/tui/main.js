@@ -2,7 +2,7 @@ import storage, { PAUSE, SHOW_HELP, SWITCH_PANE, FOCUS_LEFT_PANE, FOCUS_RIGHT_PA
 
 import HelpBox from './help-box';
 
-import { LeftPane, RightPane } from './components/lists-components';
+import List from './components/list';
 import Line from './components/line';
 
 import LeftMenu from './left-menu';
@@ -19,12 +19,20 @@ export default (_screen) => {
   screen = _screen;
 
   leftPane = {
-    box: LeftPane(screen),
+    box: List(screen, {
+    	left: 0,
+    	width: '30%',
+    	items: ['Loading']
+    }),
     line: Line(screen, { left: 1, width: '30%-3' })
   };
 
   rightPane = {
-    box: RightPane(screen),
+    box: List(screen, {
+    	left: '30%',
+    	width: '70%',
+    	items: ['{bold}Loading{/bold}, please wait']
+    }),
     line: Line(screen, { left: '30%+1', width: '70%-3' })
   };
 
