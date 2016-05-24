@@ -1,7 +1,6 @@
 import blessed from 'blessed';
 
-export default (parent, params) => blessed.list({
-	parent: parent,
+export const stylesheet = {
   top: 1,
   bottom: 1,
   tags: true,
@@ -25,6 +24,11 @@ export default (parent, params) => blessed.list({
       fg: 'grey',
       bg: 'white'
     }
-  },
-	...params
+  }
+};
+
+export default (parent, params) => blessed.list({
+  parent,
+  ...stylesheet,
+  ...params
 });

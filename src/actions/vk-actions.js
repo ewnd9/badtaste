@@ -104,7 +104,7 @@ export function fetchAudioByUrl(url) {
   }
 
   return { type: 'error' };
-};
+}
 
 export function fetchTracklist(tracklist) {
   return dispatch => {

@@ -23,7 +23,7 @@ function Mpd() {
 }
 
 Mpd.prototype.onChanged = function(system) {
-  Logger.info('onChaned', system)
+  Logger.info('onChaned', system);
   if (system === 'player') {
     return this.updateStatus();
   }

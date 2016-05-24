@@ -4,8 +4,7 @@ import storage, {
   MOVE_TO_PLAYING,
   LOCAL_SEARCH,
   UPDATE_RIGHT_PANE_ITEM,
-  store,
-  player
+  store
 } from '../storage';
 
 import _ from 'lodash';

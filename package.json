@@ -30,6 +30,7 @@
   "author": "ewnd9 <ewndnine@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "babel-preset-react": "^6.5.0",
     "blessed": "^0.1.80",
     "bluebird": "^2.10.0",
     "dot-file-config": "^0.5.0",
@@ -44,6 +45,8 @@
     "pify": "^2.3.0",
     "player": "^0.6.1",
     "playmusic": "^2.1.0",
+    "react": "^0.14.7",
+    "react-blessed": "^0.1.7",
     "redux": "^3.5.2",
     "redux-side-effect": "^2.1.2",
     "redux-thunk": "^2.1.0",
