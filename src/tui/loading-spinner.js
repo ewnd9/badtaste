@@ -5,12 +5,12 @@ export default (screen, message, lockKeys = true, label = ' {blue-fg}Loading{/bl
   loader.load(message);
 
   screen.lockKeys = lockKeys;
-  screen.key(['z'], (ch, key) => loader.stop());
+  screen.key(['z'], () => loader.stop());
 
   const superStop = loader.stop;
   loader.stop = () => {
     superStop.call(loader);
-    screen.removeKey(['z'], (ch, key) => loader.stop());
+    screen.removeKey(['z'], () => loader.stop());
   };
 
   return loader;

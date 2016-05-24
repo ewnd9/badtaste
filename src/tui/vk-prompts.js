@@ -7,10 +7,8 @@ import TextBox from './components/textbox';
 const label = '{blue-fg}Question{/blue-fg}';
 
 export const prompt = (screen, label, question) => {
-  return new Promise((resolve, reject) => {
-    _prompt(screen, question, question, (value) => {
-      resolve(value);
-    });
+  return new Promise(resolve => {
+    _prompt(screen, question, question, resolve);
   });
 };
 
@@ -30,24 +28,26 @@ export const customPrompt = (screen, lines) => {
 
       screen.render();
     });
-    input.on('submit', (data) => resolve(data));
-    input.on('cancel', () => reject());
+    input.on('submit', resolve);
+    input.on('cancel', reject);
   });
 };
 
 export const urlPrompt = (screen, urlQuestion, nameQuestion) => {
   const result = {};
 
-  return customPrompt(screen, urlQuestion).then((url) => {
-    result.url = url;
-    return customPrompt(screen, [nameQuestion]);
-  }).then((name) => {
-    result.name = name;
-    return result;
-  });
+  return customPrompt(screen, urlQuestion)
+    .then(url => {
+      result.url = url;
+      return customPrompt(screen, [nameQuestion]);
+    })
+    .then(name => {
+      result.name = name;
+      return result;
+    });
 };
 
-export const vkSearchPrompt = (screen, cb) => {
+export const vkSearchPrompt = screen => {
   const question = 'Enter search query';
   return prompt(screen, label, question);
 };

@@ -6,7 +6,7 @@ global.Logger = intel;
 
 var updateNotifier = require('update-notifier');
 var pkg = require('./package.json');
-updateNotifier({pkg: pkg}).notify();
+updateNotifier({ pkg: pkg }).notify();
 
-require('babel/register')({ only: __dirname + '/src' });
-require('./src/index');
+require('source-map-support').install();
+require('./dist/index');

@@ -1,4 +1,4 @@
-import blessedab from 'blessed';
+import blessed from 'blessed';
 
 export default (parent, label) => blessed.message({
 	parent: parent,

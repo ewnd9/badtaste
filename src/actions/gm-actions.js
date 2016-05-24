@@ -1,55 +1,49 @@
-import PlayMusic from 'playmusic';
-import Promise from 'bluebird';
-import { format } from './music-actions';
+export const GM_FETCH_ALBUM = 'GM_FETCH_ALBUM';
+export const GM_FETCH_THUMBS_UP = 'GM_FETCH_THUMBS_UP';
+export const GM_FETCH_ALL_TRACK = 'GM_FETCH_ALL_TRACK';
 
-export let pm = Promise.promisifyAll(new PlayMusic());
+export const GM_FETCH_ALBUMS_REQUEST = 'GM_FETCH_ALBUMS_REQUEST';
+export const GM_FETCH_ALBUMS_RESPONSE = 'GM_FETCH_ALBUMS_RESPONSE';
 
-export let setCredentials = (credentials) => {
-	return pm.initAsync(credentials);
-};
+export const GM_DISMISS_ALBUMS = 'GM_DISMISS_ALBUMS';
 
-export let getUrl = (track) => {
-	return pm.getStreamUrlAsync(track.id || track.nid);
-};
+import {
+  fetch,
+  apiRequest,
+  apiError
+} from './api-actions';
 
-let processTracks = (tracks) => {
-	let result = tracks.map((track) => {
-		return {
-			artist: track.artist,
-			title: track.title,
-			url: () => getUrl(track)
-		};
-	});
+import {
+  getAlbum,
+  getThumbsUp,
+  getAllTracks,
+  getAlbums
+} from '../api/gm-api';
 
-	return format(result);
-};
+export function fetchAlbum(albumId) {
+  return fetch(GM_FETCH_ALBUM, () => getAlbum(albumId));
+}
 
-export let getAlbum = (albumId) => {
-	return pm.getAlbumAsync(albumId, true).then((fullAlbumDetails) => {
-		return processTracks(fullAlbumDetails.tracks);
-	});
-};
+export function fetchThumbsUp() {
+  return fetch(GM_FETCH_THUMBS_UP, () => getThumbsUp());
+}
 
-export let findAlbum = (query) => {
-	return pm.searchAsync(query, 20).then((results) => {
-		return results.entries.filter((entry) => entry.type === '3' && entry.album);
-	});
-};
+export function fetchAllTracks() {
+  return fetch(GM_FETCH_ALL_TRACK, () => getAllTracks());
+}
 
-export let getThumbsUp = () => {
-	return pm.getFavotitesAsync().then((data) => {
-		return processTracks(data.track);
-	});
-};
+export function fetchAlbums() {
+  return dispatch => {
+    dispatch(apiRequest(GM_FETCH_ALBUMS_REQUEST));
 
-export let getAllTracks = () => {
-	return pm.getAllTracksAsync().then((data) => {
-		return processTracks(data.data.items);
-	});
-};
+    return getAlbums()
+      .then(albums => dispatch({ type: GM_FETCH_ALBUMS_RESPONSE, albums }))
+      .catch(error => dispatch(apiError(GM_FETCH_ALBUMS_REQUEST, error)));
+  };
+}
 
-export let getToken = (credentials) => {
-	return pm.loginAsync(credentials);
-};
-
-export let isAllAccess = () => pm._allAccess;
+export function dismissAlbums() {
+  return {
+    type: GM_DISMISS_ALBUMS
+  };
+}

@@ -3,7 +3,7 @@ import storage from './../storage';
 
 import Message from './components/message';
 
-export default (screen) => {
+export default screen => {
   const msg = Message(screen, ' {blue-fg}Help{/blue-fg}');
 
   const lines = [];
@@ -28,7 +28,7 @@ export default (screen) => {
 
   lines.push('');
 
-  lines.push('Storage file ' + storage.path);
+  lines.push(`Storage file ${storage.path}`);
   lines.push('Press any key to hide help box');
 
   msg.display(lines.join('\n'), 0, function(err) {

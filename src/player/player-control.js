@@ -1,58 +1,53 @@
-var spawn = require('child_process').spawn;
-var onNextSong = () => Logger.info('no next song');
+import { spawn } from 'child_process';
 
-let createProcess = (url) => {
-  var ls = spawn('node', [__dirname + '/player.js']);
+export default Player;
 
-  ls.stdin.write(url);
+function Player() {
+  this.proc = null;
+  this.callback = () => Logger.info('no next song');
+}
 
-  ls.stdout.on('data', function (data) {
-    // Logger.info('stdout: ' + data);
+Player.prototype.play = function(url) {
+  this.killPlayer();
+  setTimeout(this.createProcess.bind(this, url), 100);
+};
+
+Player.prototype.pause = function() {
+  this.proc.stdin.write('pause');
+};
+
+Player.prototype.killPlayer = function() {
+  if (this.proc) {
+    this.proc.stdin.pause();
+    this.proc.kill('SIGTERM');
+  }
+};
+
+Player.prototype.setOnNextSongCallback = function(callback) {
+  this.callback = callback;
+};
+
+Player.prototype.createProcess = function(url) {
+  Logger.info(`playing ${url}`);
+
+  this.proc = spawn('node', [`${__dirname}/player.js`]);
+  this.proc.stdin.write(url);
+
+  this.proc.stdout.on('data', buffer => {
+    Logger.info('stdout: ' + buffer.length);
   });
 
-  ls.stderr.on('data', function (data) {
-    data = data.toString();
-    if (data.trim() === 'No next song was found') {
-      onNextSong();
+  this.proc.stderr.on('data', buffer => {
+    const data = buffer.toString().trim();
+
+    if (data === 'No next song was found') {
+      this.callback();
     } else {
       Logger.error(data.substr(0, 100));
     }
   });
 
-  ls.on('close', function (code) {
-    // Logger.error('child process exited with code ' + code + ' ' + i++);
+  this.proc.on('close', function(code) {
+    Logger.error(`child process exited with code: ${code}`);
   });
-
-  return ls;
 };
-
-var x = {
-
-};
-
-let killPlayer = () => {
-  if (x.p) {
-    x.p.stdin.pause();
-    x.p.kill('SIGTERM');
-  }
-};
-
-import exitHook from 'exit-hook';
-
-exitHook(() => {
-  killPlayer();
-});
-
-export let play = (url) => {
-  killPlayer();
-
-  setTimeout(() => {
-    x.p = createProcess(url);
-  }, 10);
-};
-
-export let pause = () => {
-  x.p.stdin.write('pause');
-};
-
-export let setOnNextSong = (callback) => onNextSong = callback;

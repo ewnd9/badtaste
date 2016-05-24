@@ -4,7 +4,7 @@ import Box from './components/box';
 import TextArea from './components/textarea';
 import Text from './components/text';
 
-export default (screen) => {
+export default screen => {
   const layout = Box(screen, '50%', '50%');
   const box = TextArea();
 
@@ -23,7 +23,7 @@ export default (screen) => {
 
   screen.render();
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     box.on('blur', () => {
       screen.remove(layout);
       resolve(box.value);

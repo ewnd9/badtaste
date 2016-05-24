@@ -4,13 +4,13 @@ import List from './components/list';
 
 export default (screen, items) => {
   const list = List(undefined, {
-  	top: 'center',
-  	left: 'center',
-  	width: '50%',
-  	height: '50%',
-  	border: {
-  		type: 'line'
-  	}
+    top: 'center',
+    left: 'center',
+    width: '50%',
+    height: '50%',
+    border: {
+      type: 'line'
+    }
   });
 
   screen.append(list);
@@ -45,7 +45,7 @@ export default (screen, items) => {
 
   screen.blockEsc = true;
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     list.on('select', (item, index) => {
       done();
       resolve(index);
