@@ -14,7 +14,6 @@ import { prompt } from '../tui/vk-prompts';
 
 import {
   setCurrentIndex,
-  moveNext,
   filterPlaylist
 } from '../actions/playlist-actions';
 
@@ -35,8 +34,6 @@ function PlaylistController(screen, rightPane) {
   this.rightPane.on('select', (item, index) => {
     store.dispatch(setCurrentIndex(index));
   });
-
-  player.setOnNextSongCallback(() => store.dispatch(moveNext()));
 
   store.subscribe(() => {
     const state = store.getState().playlist;

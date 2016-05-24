@@ -1,7 +1,9 @@
+export const PLAY = 'PLAY';
+export const PAUSE = 'PAUSE';
+
 export const UPDATE_RIGHT_PANE_ITEM = 'UPDATE_RIGHT_PANE_ITEM';
 
 export const SEARCH_VK = 'SEARCH_VK';
-export const PAUSE = 'PAUSE';
 export const ADD_TO_PROFILE = 'ADD_TO_PROFILE';
 export const SWITCH_PANE = 'SWITCH_PANE';
 export const FOCUS_LEFT_PANE = 'FOCUS_LEFT_PANE';
@@ -28,11 +30,3 @@ storage.on = emitter.on.bind(emitter);
 
 import createStore from './store';
 export const store = createStore();
-
-import Player from './player/player-control';
-import exitHook from 'exit-hook';
-
-export const player = new Player([]);
-exitHook(player.killPlayer.bind(player));
-
-storage.on(PAUSE, () => player.pause());

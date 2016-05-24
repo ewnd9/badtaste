@@ -24,9 +24,9 @@ function MenuController(screen, leftPane) {
 
 MenuController.prototype.render = function() {
   const menu = []
-    .concat(fsMenu(this.screen, this.leftPane))
     .concat(vkMenu(this.screen, this.leftPane))
-    .concat(gmMenu(this.screen, this.leftPane));
+    .concat(gmMenu(this.screen, this.leftPane))
+    .concat(fsMenu(this.screen, this.leftPane));
 
   this.menu = _.flatten(menu);
   this.leftPane.setItems(_.pluck(this.menu, 'name'));

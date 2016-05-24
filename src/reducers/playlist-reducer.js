@@ -12,8 +12,8 @@ import {
   API_ERROR
 } from '../actions/api-actions';
 
-import {
-  player
+import storage, {
+  PLAY
 } from '../storage';
 
 export default playlistReducer;
@@ -124,7 +124,7 @@ function findNext(playlist, initialIndex) {
     if (url) {
       (typeof url === 'function' ? url() : Promise.resolve(url))
         .then(url => {
-          player.play(url);
+          storage.emit(PLAY, url);
         })
         .catch(err => {
           Logger.error(err);
