@@ -23,7 +23,7 @@ import {
 } from './actions/playlist-actions';
 
 import NodePlayer from './player/player-control';
-import MpdPlayer from './lib/mpd-wrapper/index';
+import MpdPlayer from './lib/mpd';
 import exitHook from 'exit-hook';
 
 const cli = meow(`

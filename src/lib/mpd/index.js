@@ -59,3 +59,7 @@ Mpd.prototype.play = function(url) {
     })
     .catch(err => Logger.error(err));
 };
+
+Mpd.prototype.pause = function() {
+  this.mpd.toggle();
+};
