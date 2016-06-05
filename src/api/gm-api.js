@@ -26,7 +26,6 @@ const processTracks = tracks => {
 };
 
 export const getAlbum = albumId => {
-  Logger.info('x', albumId);
   return pm
     .getAlbumAsync(albumId, true)
     .then(fullAlbumDetails => {
@@ -34,7 +33,7 @@ export const getAlbum = albumId => {
     });
 };
 
-export const findAlbum = query => {
+export const getAlbums = query => {
   return pm
     .searchAsync(query, 20)
     .then(results => {

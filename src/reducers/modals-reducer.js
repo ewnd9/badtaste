@@ -3,6 +3,8 @@ import {
   VK_LINKS_MODAL,
   VK_NEW_LINK_MODAL,
   VK_USER_PLAYLISTS_MODAL,
+  GM_LINKS_MODAL,
+  GM_ALBUMS_SEARCH_RESULT_MODAL,
   RESET_MODALS
 } from '../actions/modals-actions';
 
@@ -19,6 +21,10 @@ function modalsReducer(state = {
       return replaceState(state, VK_NEW_LINK_MODAL);
     case VK_USER_PLAYLISTS_MODAL:
       return replaceState(state, VK_USER_PLAYLISTS_MODAL, action.props);
+    case GM_LINKS_MODAL:
+      return replaceState(state, GM_LINKS_MODAL);
+    case GM_ALBUMS_SEARCH_RESULT_MODAL:
+      return replaceState(state, GM_ALBUMS_SEARCH_RESULT_MODAL, action.props);
     case RESET_MODALS:
       return {
         ...state,

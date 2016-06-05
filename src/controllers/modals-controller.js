@@ -6,7 +6,10 @@ import {
   VK_LINKS_MODAL,
   VK_NEW_LINK_MODAL,
   VK_USER_PLAYLISTS_MODAL,
+  GM_LINKS_MODAL,
+  GM_ALBUMS_SEARCH_RESULT_MODAL,
   openVkNewLinkModal,
+  openGmAlbumsSearchResultModal,
   resetModals
 } from '../actions/modals-actions';
 
@@ -19,6 +22,11 @@ import {
 } from '../actions/vk-actions';
 
 import {
+  fetchAlbum
+} from '../actions/gm-actions';
+
+import {
+  prompt,
   urlPrompt,
   vkSearchPrompt
 } from '../tui/vk-prompts';
@@ -55,6 +63,39 @@ ModalsController.prototype.render = function(modal, props) {
 
         store.dispatch(resetModals());
         store.dispatch(fetchGroupAudio(album.owner_id, album.album_id));
+      });
+  } else if (modal === GM_LINKS_MODAL) {
+    const { gmLinks } = storage.data; // con be done later as part of redux state
+    const labels = gmLinks.map(link => link.name);
+
+    SelectList(this.screen, ['> Search'].concat(labels))
+      .then(index => {
+        store.dispatch(resetModals());
+
+        if (index === 0) {
+          prompt(this.screen, 'Google Music', 'Search')
+            .then(query => store.dispatch(openGmAlbumsSearchResultModal(query)));
+        } else {
+          store.dispatch(fetchAlbum(gmLinks[index - 1].data.albumId));
+        }
+      }, () => Logger.info('SelectList closed by esc'));
+  } else if (modal === GM_ALBUMS_SEARCH_RESULT_MODAL) {
+    const { albums } = props;
+    const labels = albums.map(entry => `${entry.album.artist} - ${entry.album.name}`);
+
+    return SelectList(this.screen, labels)
+      .then(index => {
+        store.dispatch(resetModals());
+        const albumId = albums[index].album.albumId;
+
+        storage.data.gmLinks.unshift({ // insert at the beginning
+          name: labels[index],
+          data: { albumId }
+        });
+        storage.save();
+
+        store.dispatch(fetchAlbum(albumId));
+        storage.emit(RENDER_LEFT_PANE);
       });
   } else if (modal === VK_LINKS_MODAL) {
     const { vkLinks } = storage.data; // con be done later as part of redux state
