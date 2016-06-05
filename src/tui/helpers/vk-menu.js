@@ -1,26 +1,21 @@
-import { urlPrompt } from './../vk-prompts';
-import { nameWithCount, selectOrSearch } from './menu';
+import { nameWithCount } from './menu';
 
 import {
   fetchProfileAudio,
   fetchRecommendationsAudio,
   fetchAlbums,
-  fetchGroupAudio,
-  fetchGroupWall,
-  fetchWallAudio,
-  fetchTracklist,
-  fetchAudioByUrl
+  fetchTracklist
 } from '../../actions/vk-actions';
 
 import {
-  openVkSearchModal
+  openVkSearchModal,
+  openVkLinksModal
 } from '../../actions/modals-actions';
 
 import TracklistPrompt from '../tracklist-prompt';
 
 import storage, {
   SEARCH_VK,
-  RENDER_LEFT_PANE,
   store
 } from '../../storage';
 
@@ -58,47 +53,6 @@ function VkMenu(screen) {
   },
   {
     name: nameWithCount('{bold}VK{/bold} Play link', vkLinks),
-    fn: playLinkFn
+    fn: () => store.dispatch(openVkLinksModal())
   }];
-
-  function playLinkFn() {
-    const labels = vkLinks.map(link => link.name);
-
-    const onSelectExisting = i => {
-      const data = vkLinks[i].data;
-
-      if (data.url) {
-        store.dispatch(fetchAudioByUrl(data.url));
-      } else if (data.type === 'audio') {
-        store.dispatch(fetchGroupAudio(data.owner_id, data.album_id));
-      } else if (data.type === 'wall') {
-        store.dispatch(fetchWallAudio(data.id));
-      } else if (data.type === 'full-wall') {
-        store.dispatch(fetchGroupWall(data.id));
-      }
-    };
-
-    const onSearchNew = () => {
-      const urlsExamples = [
-        'Enter url like:',
-        '',
-        'vk.com/audios1?album_id=1',
-        'vk.com/wall1',
-        'vk.com/user1'
-      ];
-
-      urlPrompt(screen, urlsExamples, 'Enter alias for menu')
-        .then(promptResult => {
-          storage.data.vkLinks.unshift({ // insert at the beginning
-            name: promptResult.name,
-            data: { url: promptResult.url }
-          });
-
-          storage.emit(RENDER_LEFT_PANE);
-          store.dispatch(fetchAudioByUrl(promptResult.data.url));
-        });
-    };
-
-    selectOrSearch(screen, labels, onSelectExisting, onSearchNew);
-  }
 }
