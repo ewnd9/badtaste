@@ -3,13 +3,13 @@ import { nameWithCount } from './menu';
 import {
   fetchProfileAudio,
   fetchRecommendationsAudio,
-  fetchAlbums,
   fetchTracklist
 } from '../../actions/vk-actions';
 
 import {
   openVkSearchModal,
-  openVkLinksModal
+  openVkLinksModal,
+  openVkUserPlaylistsModal
 } from '../../actions/modals-actions';
 
 import TracklistPrompt from '../tracklist-prompt';
@@ -41,7 +41,7 @@ function VkMenu(screen) {
   },
   {
     name: '{bold}VK{/bold} Playlists',
-    fn: () => store.dispatch(fetchAlbums())
+    fn: () => store.dispatch(openVkUserPlaylistsModal())
   },
   {
     name: '{bold}VK{/bold} Search',

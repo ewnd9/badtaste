@@ -8,7 +8,6 @@ import storage, {
   FOCUS_RIGHT_PANE
 } from '../storage';
 
-export const VK_USER_PLAYLISTS_DIALOG = 'VK_USER_PLAYLISTS_DIALOG';
 export const GM_ALBUMS_DIALOG = 'GM_ALBUMS_DIALOG';
 
 export const VK_ADD_TO_PROFILE_DIALOG = 'VK_ADD_TO_PROFILE_DIALOG';

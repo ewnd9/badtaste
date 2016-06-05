@@ -8,18 +8,12 @@ import storage, {
 } from '../storage';
 
 import {
-  VK_USER_PLAYLISTS_DIALOG,
   GM_ALBUMS_DIALOG,
   STATE_OPEN_DIALOG,
   STATE_CLOSE_DIALOG,
   STATE_START_SPINNER,
   STATE_STOP_SPINNER
 } from '../actions/dialogs-actions';
-
-import {
-  dismissAlbums as vkDismissAlbums,
-  fetchWallAudio
-} from '../actions/vk-actions';
 
 import {
   dismissAlbums as gmDismissAlbums,
@@ -40,7 +34,6 @@ DialogsController.prototype.onNextState = function() {
   const {
     activeDialog,
     activeState,
-    vkUserPlaylists,
     gmAlbums,
     message,
     endMessage
@@ -53,9 +46,7 @@ DialogsController.prototype.onNextState = function() {
   this.activeDialog = activeDialog;
 
   if (this.activeState === STATE_OPEN_DIALOG || this.activeState === STATE_CLOSE_DIALOG) {
-    if (this.activeDialog === VK_USER_PLAYLISTS_DIALOG) {
-      this.openVkUserPlaylistsDialog(vkUserPlaylists);
-    } else if (this.activeDialog === GM_ALBUMS_DIALOG) {
+    if (this.activeDialog === GM_ALBUMS_DIALOG) {
       this.openGmAlbumsDialog(gmAlbums);
     }
   } else if (this.activeState === STATE_START_SPINNER) {
@@ -64,20 +55,6 @@ DialogsController.prototype.onNextState = function() {
     this.spinner.stop();
     InfoBox(this.screen, endMessage);
   }
-};
-
-DialogsController.prototype.openVkUserPlaylistsDialog = function(albums) {
-  return SelectList(this.screen, albums.map(album => album.title))
-    .then(index => {
-      const album = albums[index];
-
-      store.dispatch(vkDismissAlbums());
-      store.dispatch(fetchWallAudio(album.owner_id, album.album_id));
-    })
-    .catch(err => {
-      Logger.error(err);
-      store.dispatch(vkDismissAlbums());
-    });
 };
 
 DialogsController.prototype.openGmAlbumsDialog = function(albums) {

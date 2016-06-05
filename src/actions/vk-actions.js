@@ -5,7 +5,6 @@ import {
   getWall,
   getSearch,
   getRecommendations,
-  getAlbums,
   getBatchSearch,
   resolveScreenName
 } from '../api/vk-api';
@@ -57,22 +56,6 @@ export function fetchSearchAudio(query) {
 
 export function fetchRecommendationsAudio() {
   return fetch(VK_FETCH_RECOMMENDATIONS_AUDIO, () => getRecommendations());
-}
-
-export function fetchAlbums() {
-  return dispatch => {
-    dispatch(apiRequest(VK_FETCH_ALBUMS_REQUEST));
-
-    return getAlbums()
-      .then(albums => dispatch({ type: VK_FETCH_ALBUMS_RESPONSE, albums }))
-      .catch(error => dispatch(apiError(VK_FETCH_ALBUMS_REQUEST, error)));
-  };
-}
-
-export function dismissAlbums() {
-  return {
-    type: VK_DISMISS_ALBUMS
-  };
 }
 
 const albumRegex = /.*vk.com\/audios([-\d]+)\?album_id=([\d]+)/;

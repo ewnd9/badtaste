@@ -2,6 +2,7 @@ import {
   VK_SEARCH_MODAL,
   VK_LINKS_MODAL,
   VK_NEW_LINK_MODAL,
+  VK_USER_PLAYLISTS_MODAL,
   RESET_MODALS
 } from '../actions/modals-actions';
 
@@ -16,6 +17,8 @@ function modalsReducer(state = {
       return replaceState(state, VK_LINKS_MODAL);
     case VK_NEW_LINK_MODAL:
       return replaceState(state, VK_NEW_LINK_MODAL);
+    case VK_USER_PLAYLISTS_MODAL:
+      return replaceState(state, VK_USER_PLAYLISTS_MODAL, action.props);
     case RESET_MODALS:
       return {
         ...state,
@@ -28,9 +31,10 @@ function modalsReducer(state = {
 
 export default modalsReducer;
 
-function replaceState(state, nextModal) {
+function replaceState(state, nextModal, nextProps) {
   return {
     ...state,
-    modal: nextModal
+    modal: nextModal,
+    props: nextProps
   };
 }

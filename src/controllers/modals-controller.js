@@ -5,6 +5,7 @@ import {
   VK_SEARCH_MODAL,
   VK_LINKS_MODAL,
   VK_NEW_LINK_MODAL,
+  VK_USER_PLAYLISTS_MODAL,
   openVkNewLinkModal,
   resetModals
 } from '../actions/modals-actions';
@@ -27,21 +28,33 @@ function ModalsController(screen) {
   this.modal = null;
 
   store.subscribe(() => {
-    if (this.modal !== store.getState().modals.modal) {
-      this.modal = store.getState().modals.modal;
-      this.render(this.modal);
+    const { modal, props } = store.getState().modals;
+
+    if (this.modal !== modal) {
+      this.modal = modal;
+      this.render(modal, props);
     }
   });
 }
 
 export default ModalsController;
 
-ModalsController.prototype.render = function(modal) {
+ModalsController.prototype.render = function(modal, props) {
   if (modal === VK_SEARCH_MODAL) {
     vkSearchPrompt(this.screen) // can be done later as react component
       .then(query => {
         store.dispatch(resetModals());
         store.dispatch(fetchSearchAudio(query));
+      });
+  } else if (modal === VK_USER_PLAYLISTS_MODAL) {
+    const { albums } = props;
+
+    SelectList(this.screen, albums.map(album => album.title))
+      .then(index => {
+        const album = albums[index];
+
+        store.dispatch(resetModals());
+        store.dispatch(fetchGroupAudio(album.owner_id, album.album_id));
       });
   } else if (modal === VK_LINKS_MODAL) {
     const { vkLinks } = storage.data; // con be done later as part of redux state
