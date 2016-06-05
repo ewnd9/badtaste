@@ -6,7 +6,7 @@ import {
   getSearch,
   getRecommendations,
   getBatchSearch,
-  resolveScreenName
+  getOwnerIdByUrl
 } from '../api/vk-api';
 
 import {
@@ -60,7 +60,6 @@ export function fetchRecommendationsAudio() {
 
 const albumRegex = /.*vk.com\/audios([-\d]+)\?album_id=([\d]+)/;
 const wallRegex = /.*vk.com\/wall([\S]+)/;
-const communityRegex = /.*vk.com\/([\S]+)/;
 
 export function fetchAudioByUrl(url) {
   const albumMatch = albumRegex.exec(url);
@@ -75,24 +74,15 @@ export function fetchAudioByUrl(url) {
     return fetchWallAudio(wallMatch[1]);
   }
 
-  const communityMatch = communityRegex.exec(url);
-
-  if (communityMatch) {
-    const screenName = communityMatch[1];
-
-    return dispatch => {
-      dispatch({ type: VK_RESOLVE_SCREEN_NAME_REQUEST, screenName });
-
-      return resolveScreenName(screenName)
-        .then(response => {
-          dispatch({ type: VK_RESOLVE_SCREEN_NAME_RESPONSE, screenName });
-          dispatch(fetchWallAudio((response.type === 'group' ? '-' : '') + response.object_id));
-        })
-        .catch(err => dispatch(apiError(VK_RESOLVE_SCREEN_NAME_REQUEST, err)));
-    };
-  }
-
-  return { type: 'error' };
+  return dispatch => {
+    return getOwnerIdByUrl(url)
+      .then(ownerId => {
+        dispatch(fetchWallAudio(ownerId));
+      })
+      .catch(err => {
+        Logger.error(err); // @TODO add to redux ecosystem
+      });
+  };
 }
 
 export function fetchTracklist(tracklist) {

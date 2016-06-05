@@ -215,5 +215,26 @@ export const resolveScreenName = screenName => {
   return vk.method('utils.resolveScreenName', { screen_name: screenName });
 };
 
+const communityRegex = /.*vk.com\/([\S]+)/;
+
+export const getOwnerIdByUrl = url => {
+  const communityMatch = communityRegex.exec(url);
+
+  if (!communityMatch) {
+    return Promise.reject(new Error(`Wrong url: ${url}`));
+  }
+
+  const screenName = communityMatch[1];
+
+  return resolveScreenName(screenName)
+    .then(res => {
+      if (!res.object_id) {
+        return Promise.reject(new Error(`Noting found by ${screenName}`));
+      }
+      
+      return res.type === 'group' ? -1 * res.object_id : res.object_id;
+    });
+};
+
 export const getUserInfo = () => vk.method('users.get');
 export const setToken = token => vk.setToken(token);

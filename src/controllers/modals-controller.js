@@ -5,10 +5,12 @@ import {
   VK_SEARCH_MODAL,
   VK_LINKS_MODAL,
   VK_NEW_LINK_MODAL,
+  VK_NEW_WALL_MODAL,
   VK_USER_PLAYLISTS_MODAL,
   GM_LINKS_MODAL,
   GM_ALBUMS_SEARCH_RESULT_MODAL,
   openVkNewLinkModal,
+  openVkNewWallModal,
   openGmAlbumsSearchResultModal,
   resetModals
 } from '../actions/modals-actions';
@@ -26,6 +28,10 @@ import {
 } from '../actions/gm-actions';
 
 import {
+  getOwnerIdByUrl
+} from '../api/vk-api';
+
+import {
   prompt,
   urlPrompt,
   vkSearchPrompt
@@ -41,7 +47,8 @@ function ModalsController(screen) {
     [VK_SEARCH_MODAL]: this.renderVkSearchModal,
     [VK_USER_PLAYLISTS_MODAL]: this.renderVkUserPlaylistsModal,
     [VK_LINKS_MODAL]: this.renderVkLinksModal,
-    [VK_NEW_LINK_MODAL]: this.renderVkNewLinskModal
+    [VK_NEW_LINK_MODAL]: this.renderVkNewLinkModal,
+    [VK_NEW_WALL_MODAL]: this.renderVkNewWallModal
   };
 
   store.subscribe(() => {
@@ -128,14 +135,16 @@ ModalsController.prototype.renderVkLinksModal = function() {
   const { vkLinks } = storage.data; // con be done later as part of redux state
   const labels = vkLinks.map(link => link.name);
 
-  SelectList(this.screen, ['> Search'].concat(labels))
+  SelectList(this.screen, ['> Search', '> Wall'].concat(labels))
     .then(index => {
       store.dispatch(resetModals());
 
       if (index === 0) {
         store.dispatch(openVkNewLinkModal());
+      } else if (index === 1) {
+        store.dispatch(openVkNewWallModal());
       } else {
-        const data = vkLinks[index - 1].data;
+        const data = vkLinks[index - 2].data;
 
         if (data.url) {
           store.dispatch(fetchAudioByUrl(data.url));
@@ -150,7 +159,7 @@ ModalsController.prototype.renderVkLinksModal = function() {
     }, () => Logger.info('SelectList closed by esc'));
 };
 
-ModalsController.prototype.renderVkNewLinskModal = function() {
+ModalsController.prototype.renderVkNewLinkModal = function() {
   const { vkLinks } = storage.data; // con be done later as part of redux state
 
   const urlsExamples = [
@@ -169,6 +178,42 @@ ModalsController.prototype.renderVkNewLinskModal = function() {
         name: promptResult.name,
         data: { url: promptResult.url }
       });
+      storage.save();
+
+      storage.emit(RENDER_LEFT_PANE);
+      store.dispatch(fetchAudioByUrl(promptResult.url));
+    });
+};
+
+ModalsController.prototype.renderVkNewWallModal = function() {
+  const { vkLinks } = storage.data; // con be done later as part of redux state
+
+  const urlsExamples = [
+    'Enter url like:',
+    '',
+    'vk.com/audios1?album_id=1',
+    'vk.com/wall1',
+    'vk.com/user1'
+  ];
+
+  let promptResult;
+
+  urlPrompt(this.screen, urlsExamples, 'Enter alias for menu')
+    .then(_promptResult => {
+      promptResult = _promptResult;
+
+      store.dispatch(resetModals());
+      return getOwnerIdByUrl(promptResult.url); // need load indicator
+    })
+    .then(id => {
+      vkLinks.unshift({ // insert at the beginning
+        name: promptResult.name,
+        data: {
+          type: 'full-wall',
+          id: id
+        }
+      });
+
       storage.save();
 
       storage.emit(RENDER_LEFT_PANE);

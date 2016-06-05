@@ -1,6 +1,7 @@
 export const VK_SEARCH_MODAL = 'VK_SEARCH_MODAL';
 export const VK_LINKS_MODAL = 'VK_LINKS_MODAL';
 export const VK_NEW_LINK_MODAL = 'VK_NEW_LINK_MODAL';
+export const VK_NEW_WALL_MODAL = 'VK_NEW_WALL_MODAL';
 export const VK_USER_PLAYLISTS_MODAL = 'VK_USER_PLAYLISTS_MODAL';
 
 export const GM_LINKS_MODAL = 'GM_LINKS_MODAL';
@@ -31,6 +32,12 @@ export function openVkLinksModal() {
 export function openVkNewLinkModal() {
   return {
     type: VK_NEW_LINK_MODAL
+  };
+}
+
+export function openVkNewWallModal() {
+  return {
+    type: VK_NEW_WALL_MODAL
   };
 }
 
