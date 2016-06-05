@@ -1,9 +1,8 @@
-import { urlPrompt, vkSearchPrompt } from './../vk-prompts';
+import { urlPrompt } from './../vk-prompts';
 import { nameWithCount, selectOrSearch } from './menu';
 
 import {
   fetchProfileAudio,
-  fetchSearchAudio,
   fetchRecommendationsAudio,
   fetchAlbums,
   fetchGroupAudio,
@@ -12,6 +11,10 @@ import {
   fetchTracklist,
   fetchAudioByUrl
 } from '../../actions/vk-actions';
+
+import {
+  openVkSearchModal
+} from '../../actions/modals-actions';
 
 import TracklistPrompt from '../tracklist-prompt';
 
@@ -28,7 +31,8 @@ function VkMenu(screen) {
     return [];
   }
 
-  storage.on(SEARCH_VK, searchFn);
+  const openSearchModal = () => store.dispatch(openVkSearchModal());
+  storage.on(SEARCH_VK, openSearchModal);
 
   const { vkLinks } = storage.data;
 
@@ -46,7 +50,7 @@ function VkMenu(screen) {
   },
   {
     name: '{bold}VK{/bold} Search',
-    fn: searchFn
+    fn: openSearchModal
   },
   {
     name: '{bold}VK{/bold} Tracklist search',
@@ -96,10 +100,5 @@ function VkMenu(screen) {
     };
 
     selectOrSearch(screen, labels, onSelectExisting, onSearchNew);
-  }
-
-  function searchFn() {
-    return vkSearchPrompt(screen)
-      .then(query => fetchSearchAudio(query));
   }
 }

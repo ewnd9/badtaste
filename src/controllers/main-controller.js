@@ -14,12 +14,14 @@ import MenuController from './menu-controller';
 import PlaylistController from './playlist-controller';
 
 import DialogsController from './dialogs-controller';
+import ModalsController from './modals-controller';
 
 export default MainController;
 
 function MainController(screen) {
   this.screen = screen;
   this.dialogsController = new DialogsController(screen);
+  this.modalsController = new ModalsController(screen);
 
   this.menuPane = {
     box: List(screen, {
