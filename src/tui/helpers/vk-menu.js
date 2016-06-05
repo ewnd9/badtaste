@@ -7,6 +7,7 @@ import {
   fetchRecommendationsAudio,
   fetchAlbums,
   fetchGroupAudio,
+  fetchGroupWall,
   fetchWallAudio,
   fetchTracklist,
   fetchAudioByUrl
@@ -68,6 +69,8 @@ function VkMenu(screen) {
         store.dispatch(fetchGroupAudio(data.owner_id, data.album_id));
       } else if (data.type === 'wall') {
         store.dispatch(fetchWallAudio(data.id));
+      } else if (data.type === 'full-wall') {
+        store.dispatch(fetchGroupWall(data.id));
       }
     };
 

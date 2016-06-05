@@ -2,6 +2,7 @@ import {
   getProfileAudio,
   getGroupAudio,
   getWallAudio,
+  getWall,
   getSearch,
   getRecommendations,
   getAlbums,
@@ -19,6 +20,7 @@ import {
 
 export const VK_FETCH_PROFILE_AUDIO = 'VK_FETCH_PROFILE_AUDIO';
 export const VK_FETCH_GROUP_AUDIO = 'VK_FETCH_GROUP_AUDIO';
+export const VK_FETCH_GROUP_WALL = 'VK_FETCH_GROUP_WALL';
 export const VK_FETCH_WALL_AUDIO = 'VK_FETCH_WALL_AUDIO';
 export const VK_FETCH_SEARCH_AUDIO = 'VK_FETCH_SEARCH_AUDIO';
 export const VK_FETCH_RECOMMENDATIONS_AUDIO = 'VK_FETCH_RECOMMENDATIONS_AUDIO';
@@ -39,6 +41,10 @@ export function fetchProfileAudio() {
 
 export function fetchGroupAudio(groupId, albumId) {
   return fetch(VK_FETCH_GROUP_AUDIO, () => getGroupAudio(groupId, albumId));
+}
+
+export function fetchGroupWall(ownerId) {
+  return fetch(VK_FETCH_GROUP_WALL, () => getWall(ownerId));
 }
 
 export function fetchWallAudio(id) {

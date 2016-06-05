@@ -2,6 +2,7 @@ import * as vk from 'vk-universal-api';
 
 import splitTracklist from 'split-tracklist';
 import Promise from 'bluebird';
+import got from 'got';
 
 import { formatTrack } from './music-actions';
 
@@ -54,11 +55,80 @@ export const getWallAudio = id => {
   return vk
     .method('wall.getById', params, { transformResponse: false })
     .then(result => {
-      const attachments = result.body.response[0].attachments
-        .filter(a => a.type === 'audio')
-        .map(a => a.audio);
+      const attachments = _filterWallAudio(result.body.response[0]);
       return handleData(attachments);
     });
+};
+
+export const getWall = id => {
+  const params = { owner_id: id };
+
+  return vk
+    .method('wall.get', params, { transformResponse: false })
+    .then(result => {
+      const response = result.body.response;
+      return Promise.all(response.slice(1).map(_getWallPostPlaylist));
+    })
+    .then(result => {
+      return result.reduce((total, curr) => total.concat(curr), []);
+    });
+};
+
+const _getWallPostPlaylist = wallPost => {
+  const text = wallPost.text.split('<br>').join('\n');
+  const tracks = splitTracklist(text);
+
+  const title = tracks.length > 0 ? tracks[0].track : text.substr(0, 50);
+  const titleObj = { trackTitleFull: formatTrackFull({ label: title }) };
+
+  const playlistUrlMatch = _extractPlaylistUrl(wallPost.text);
+
+  if (playlistUrlMatch) {
+    return getGroupAudio(playlistUrlMatch.ownerId, playlistUrlMatch.playlistId)
+      .then(result => [titleObj].concat(result));
+  }
+
+  const match = /(vk\.cc\/[\w\d]+)/.exec(wallPost.text);
+
+  if (!match) {
+    return [titleObj].concat(handleData(_filterWallAudio(wallPost)));
+  }
+
+  const url = `https://${match[1]}`;
+
+  return got(url, { followRedirect: false })
+    .then(res => {
+      const location = res.headers.location;
+      const playlistUrlMatch =  _extractPlaylistUrl(location);
+
+      if (playlistUrlMatch) {
+        return getGroupAudio(playlistUrlMatch.ownerId, playlistUrlMatch.playlistId);
+      } else {
+        return [];
+      }
+    })
+    .then(audios => {
+      return [titleObj].concat(audios);
+    });
+};
+
+const _extractPlaylistUrl = url => {
+  const match = /vk\.com\/audios([-\d]+)\?album_id=([\d]+)/.exec(url);
+
+  if (!match) {
+    return null;
+  }
+
+  const ownerId = match[1];
+  const playlistId = match[2];
+
+  return { ownerId, playlistId };
+};
+
+const _filterWallAudio = wallPost => {
+  return wallPost.attachments
+    .filter(a => a.type === 'audio')
+    .map(a => a.audio);
 };
 
 export const getRecommendations = () => {

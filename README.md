@@ -45,6 +45,7 @@ $ sudo apt-get install libasound2-dev
 
 ```
 $ badtaste # press '?' inside to get help
+$ badtaste --player mpd
 ```
 
 ## Related

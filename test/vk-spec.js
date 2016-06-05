@@ -1,9 +1,15 @@
-var fs = require('fs');
-var expect = require('chai').expect;
+'use strict';
+
+require('babel-register');
+global.Logger = console;
+
+const fs = require('fs');
+const expect = require('chai').expect;
 
 describe('vkSpec', () => {
 
-  let vk = require('./../src/actions/vk-actions');
+  const boot = require('./boot').default;
+  const vk = require('./../src/api/vk-api');
 
   it('album', (done) => {
     var url = 'http://vk.com/audios-2266?album_id=64735015';
