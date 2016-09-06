@@ -1,3 +1,5 @@
+import { createReducer } from './utils';
+
 import {
   DIALOG_WITH_SPINNER_START,
   DIALOG_WITH_SPINNER_END,
@@ -6,38 +8,35 @@ import {
   STATE_STOP_SPINNER
 } from '../actions/dialogs-actions';
 
-function dialogs(state = {
+export default createReducer({
   activeDialog: null,
   hasSpinner: false,
   activeState: null,
   message: null,
   endMessage: null
-}, action) {
-  switch (action.type) {
-    case DIALOG_WITH_SPINNER_START:
-      return {
-        ...state,
-        activeDialog: action.subType,
-        activeState: STATE_START_SPINNER,
-        message: action.message
-      };
-    case DIALOG_WITH_SPINNER_END:
-      return {
-        ...state,
-        activeDialog: null,
-        activeState: STATE_STOP_SPINNER,
-        endMessage: action.endMessage
-      };
-    case DIALOG_WITH_SPINNER_ERROR:
-      return {
-        ...state,
-        activeDialog: null,
-        activeState: STATE_STOP_SPINNER,
-        error: action.error
-      };
-    default:
-      return state;
+}, {
+  [DIALOG_WITH_SPINNER_START](state, action) {
+    return {
+      ...state,
+      activeDialog: action.subType,
+      activeState: STATE_START_SPINNER,
+      message: action.message
+    };
+  },
+  [DIALOG_WITH_SPINNER_END](state, action) {
+    return {
+      ...state,
+      activeDialog: null,
+      activeState: STATE_STOP_SPINNER,
+      endMessage: action.endMessage
+    };
+  },
+  [DIALOG_WITH_SPINNER_ERROR](state, action) {
+    return {
+      ...state,
+      activeDialog: null,
+      activeState: STATE_STOP_SPINNER,
+      error: action.error
+    };
   }
-}
-
-export default dialogs;
+});

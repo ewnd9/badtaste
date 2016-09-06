@@ -1,3 +1,5 @@
+import { createReducer } from './utils';
+
 import {
   SET_CURRENT_INDEX,
   MOVE_NEXT,
@@ -16,8 +18,6 @@ import storage, {
   PLAY
 } from '../storage';
 
-export default playlistReducer;
-
 const defaultState = {
   originalPlaylist: [],
   playlist: [],
@@ -26,93 +26,99 @@ const defaultState = {
   error: null
 };
 
-function playlistReducer(state = defaultState, action) {
-  Logger.info(action.type, action.subType);
+export default createReducer(defaultState, {
+  [SET_CURRENT_INDEX](state, action) {
+    let currentIndex;
 
-  let currentIndex;
-  let playlist;
+    currentIndex = action.index % state.playlist.length;
+    currentIndex = findNext(state.playlist, currentIndex, action); // @sideEffect
 
-  switch (action.type) {
-    case SET_CURRENT_INDEX:
-      currentIndex = action.index % state.playlist.length;
-      currentIndex = findNext(state.playlist, currentIndex, action); // @sideEffect
+    return {
+      ...state,
+      currentIndex
+    };
+  },
+  [MOVE_NEXT](state, action) {
+    let currentIndex;
 
-      return {
-        ...state,
-        currentIndex
-      };
-    case MOVE_NEXT:
-      currentIndex = (state.currentIndex + 1) % state.playlist.length;
-      currentIndex = findNext(state.playlist, currentIndex, action); // @sideEffect
+    currentIndex = (state.currentIndex + 1) % state.playlist.length;
+    currentIndex = findNext(state.playlist, currentIndex, action); // @sideEffect
 
-      return {
-        ...state,
-        currentIndex
-      };
-    case FILTER_PLAYLIST:
-      const { originalPlaylist } = this.state;
-      const { query } = action;
+    return {
+      ...state,
+      currentIndex
+    };
+  },
+  [FILTER_PLAYLIST](state, action) {
+    const { originalPlaylist } = this.state;
+    const { query } = action;
 
-      if (!query || query.length === 0) {
-        playlist = originalPlaylist;
-      } else {
-        const s = query.toLowerCase();
+    let playlist;
+    let currentIndex;
 
-        playlist = originalPlaylist.filter(track => {
-          return track.artist.toLowerCase().indexOf(s) > - 1 ||
-                 track.title.toLowerCase().indexOf(s) > -1;
-        });
-      }
+    if (!query || query.length === 0) {
+      playlist = originalPlaylist;
+    } else {
+      const s = query.toLowerCase();
 
-      return {
-        ...state,
-        currentIndex,
-        playlist
-      };
-    case API_REQUEST:
-      return {
-        ...state,
-        isFetching: true
-      };
-    case API_RESPONSE:
-      currentIndex = 0;
-      playlist = action.audio;
+      playlist = originalPlaylist.filter(track => {
+        return track.artist.toLowerCase().indexOf(s) > - 1 ||
+               track.title.toLowerCase().indexOf(s) > -1;
+      });
+    }
 
-      currentIndex = findNext(playlist, currentIndex, action); // @sideEffect
+    return {
+      ...state,
+      currentIndex,
+      playlist
+    };
+  },
+  [API_REQUEST](state) {
+    return {
+      ...state,
+      isFetching: true
+    };
+  },
+  [API_RESPONSE](state, action) {
+    let currentIndex = 0;
+    const playlist = action.audio;
 
-      return {
-        ...state,
-        isFetching: false,
-        playlist,
-        originalPlaylist: playlist,
-        currentIndex
-      };
-    case API_RESPONSE_ADD_TRACK:
-      playlist = state.playlist.concat(action.track);
+    currentIndex = findNext(playlist, currentIndex, action); // @sideEffect
 
-      return {
-        ...state,
-        isFetching: false,
-        playlist,
-        originalPlaylist: playlist
-      };
-    case API_RESPONSE_COMPLETE:
-      return {
-        ...state,
-        isFetching: false
-      };
-    case API_ERROR:
-      Logger.error(action.error);  // @sideEffect
+    return {
+      ...state,
+      isFetching: false,
+      playlist,
+      originalPlaylist: playlist,
+      currentIndex
+    };
+  },
+  [API_RESPONSE_ADD_TRACK](state, action) {
+    const playlist = state.playlist.concat(action.track);
 
-      return {
-        ...state,
-        isFetching: false,
-        error: action.error
-      };
-    default:
-      return state;
+    return {
+      ...state,
+      isFetching: false,
+      playlist,
+      originalPlaylist: playlist
+    };
+  },
+  [API_RESPONSE_COMPLETE](state) {
+    return {
+      ...state,
+      isFetching: false
+    };
+  },
+  [API_ERROR](state, action) {
+    Logger.error(action.error);
+
+    return {
+      ...state,
+      isFetching: false,
+      error: action.error
+    };
   }
-}
+});
 
 // function findNext(playlist, initialIndex, action) { // @TODO redux-side-effect with action
 function findNext(playlist, initialIndex) {
