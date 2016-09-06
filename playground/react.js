@@ -1,6 +1,6 @@
 import React from 'react';
 import blessed from 'blessed';
-import { render } from 'react-blessed';
+import { render } from '@ewnd9/react-blessed';
 
 import { stylesheet as listStyle } from '../src/tui/components/list';
 import { stylesheet as lineStyle } from '../src/tui/components/line';

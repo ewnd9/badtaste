@@ -1,13 +1,7 @@
 import blessed from 'blessed';
 
-export const stylesheet = {
-  top: 1,
-  bottom: 1,
+export const listStylesheet = {
   tags: true,
-  padding: {
-    left: 1,
-    right: 1
-  },
   input: true,
   scrollable: true,
   keys: true,
@@ -24,6 +18,16 @@ export const stylesheet = {
       fg: 'grey',
       bg: 'white'
     }
+  }
+};
+
+export const stylesheet = {
+  ...listStylesheet,
+  top: 1,
+  bottom: 1,
+  padding: {
+    left: 1,
+    right: 1
   }
 };
 

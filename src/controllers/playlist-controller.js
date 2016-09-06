@@ -1,14 +1,16 @@
+import React from 'react';
+
+import { listStylesheet } from '../tui/components/list';
+import { connect } from 'react-redux';
+
 import storage, {
   ADD_TO_PROFILE,
-  FOCUS_RIGHT_PANE,
   MOVE_TO_PLAYING,
   LOCAL_SEARCH,
   UPDATE_RIGHT_PANE_ITEM,
-  store
 } from '../storage';
 
 import _ from 'lodash';
-
 import { prompt } from '../tui/vk-prompts';
 
 import {
@@ -21,65 +23,63 @@ import {
   vkAddOnTop
 } from '../actions/dialogs-actions';
 
-export default PlaylistController;
+const mapStateToProps = ({ playlist }) => ({ playlist });
+const mapDispatchToProps = { setCurrentIndex, filterPlaylist, vkAddOnTop, vkAddToProfile };
 
-function PlaylistController(screen, rightPane) {
-  this.screen = screen;
-  this.rightPane = rightPane;
+export default connect(mapStateToProps, mapDispatchToProps)(React.createClass({
+  componentWillMount() {
+    storage.on(MOVE_TO_PLAYING, () => {
+      const { playlist: { currentIndex } } = this.props;
+      this.box.select(currentIndex);
+    });
 
-  this.playlist = null;
-  this.currentIndex = null;
+    storage.on(LOCAL_SEARCH, () => {
+      const { screen, filterPlaylist } = this.props;
 
-  this.rightPane.on('select', (item, index) => {
-    store.dispatch(setCurrentIndex(index));
-  });
+      prompt(screen, 'Search', '')
+        .then(query => filterPlaylist(query))
+        .catch(err => Logger.error(err.stack || err));
+    });
 
-  store.subscribe(() => {
-    const state = store.getState().playlist;
+    storage.on(ADD_TO_PROFILE, () => {
+      const { playlist: { playlist }, vkAddOnTop, vkAddToProfile } = this.props;
 
-    if (state.playlist !== this.playlist && state.playlist.length > 0) {
-      this.playlist = state.playlist;
+      const selected = playlist[this.box.selected];
+      const listEl = this.box.items[this.box.selected];
 
-      this.setAudio(this.playlist);
-      storage.emit(FOCUS_RIGHT_PANE);
-    }
+      if (selected.isAdded) {
+        vkAddOnTop({ selected, listEl });
+      } else {
+        vkAddToProfile({ selected, listEl });
+      }
+    });
 
-    if (state.currentIndex !== this.currentIndex) {
-      this.currentIndex = state.currentIndex;
+    storage.on(UPDATE_RIGHT_PANE_ITEM, ({ item, text}) => {
+      this.box.setItem(item, text);
+    });
+  },
+  setRightBox(box) {
+    const { setCurrentIndex, setRightBox } = this.props;
 
-      this.rightPane.select(this.currentIndex);
-      storage.emit(FOCUS_RIGHT_PANE);
-    }
-  });
+    this.box = box;
+    this.box.on('select', (item, index) => {
+      setCurrentIndex(index);
+    });
 
-  storage.on(MOVE_TO_PLAYING, () => this.rightPane.select(this.currentIndex));
+    setRightBox(box);
+  },
+  focus() {
+    this.box.focus();
+  },
+  render() {
+    const { playlist: { playlist } } = this.props;
+    const items = playlist && playlist.length > 0 ? _.pluck(playlist, 'trackTitleFull') : ['{bold}Loading{/bold}, please wait'];
 
-  storage.on(LOCAL_SEARCH, () => {
-    prompt(this.screen, 'Search', '').then(query => store.dispatch(filterPlaylist(query)));
-  });
-
-  storage.on(ADD_TO_PROFILE, () => {
-    const selected = this.playlist[this.rightPane.selected];
-    const listEl = this.rightPane.items[this.rightPane.selected];
-
-    if (selected.isAdded) {
-      store.dispatch(vkAddOnTop({ selected, listEl }));
-    } else {
-      store.dispatch(vkAddToProfile({ selected, listEl }));
-    }
-  });
-
-  storage.on(UPDATE_RIGHT_PANE_ITEM, ({ item, text}) => {
-    this.rightPane.setItem(item, text);
-  });
-}
-
-PlaylistController.prototype.setListElements = function(elements) {
-  this.rightPane.clearItems();
-  this.rightPane.setItems(elements);
-};
-
-PlaylistController.prototype.setAudio = function(audio) {
-  this.setListElements(_.pluck(audio, 'trackTitleFull'));
-  storage.emit(FOCUS_RIGHT_PANE);
-};
+    return (
+      <list
+        {...listStylesheet}
+        ref={this.setRightBox}
+        items={items} />
+    );
+  }
+}));

@@ -1,40 +1,41 @@
+import React from 'react';
+import { stylesheet as listStyle } from '../tui/components/list';
+
 import _ from 'lodash';
 
 import vkMenu from '../tui/helpers/vk-menu';
 import gmMenu from '../tui/helpers/gm-menu';
 import fsMenu from '../tui/helpers/fs-menu';
 
-import storage, {
-  RENDER_LEFT_PANE
-} from '../storage';
+export default React.createClass({
+  componentWillMount() {
+    const { screen } = this.props;
 
-export default MenuController;
+    this.menu = _.flatten([]
+      .concat(vkMenu(screen))
+      .concat(gmMenu(screen))
+      .concat(fsMenu(screen)));
+  },
+  focus() {
+    this.box.focus();
+  },
+  setLeftBox(box) {
+    this.box = box;
+    this.box.on('select', this.onSelect);
 
-function MenuController(screen, leftPane) {
-  this.screen = screen;
-  this.leftPane = leftPane;
-  this.MenuController = null;
-
-  this.render();
-  storage.on(RENDER_LEFT_PANE, this.render.bind(this));
-
-  this.leftPane.on('select', this.onSelect.bind(this));
-  this.onSelect(null, 0);
-}
-
-MenuController.prototype.render = function() {
-  const menu = []
-    .concat(vkMenu(this.screen, this.leftPane))
-    .concat(gmMenu(this.screen, this.leftPane))
-    .concat(fsMenu(this.screen, this.leftPane));
-
-  this.menu = _.flatten(menu);
-  this.leftPane.setItems(_.pluck(this.menu, 'name'));
-
-  this.leftPane.focus();
-  this.screen.render();
-};
-
-MenuController.prototype.onSelect = function(item, index) {
-  this.menu[index].fn();
-};
+    this.onSelect(null, 0);
+  },
+  onSelect(item, index) {
+    this.menu[index].fn();
+  },
+  render() {
+    return (
+      <list
+        {...listStyle}
+        ref={this.setLeftBox}
+        left={0}
+        width="30%"
+        items={_.pluck(this.menu, 'name')} />
+    );
+  }
+});
