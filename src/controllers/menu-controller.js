@@ -3,14 +3,24 @@ import { stylesheet as listStyle } from '../tui/components/list';
 
 import _ from 'lodash';
 
+// import storage, { RENDER_LEFT_PANE } from '../storage';
+
 import vkMenu from '../tui/helpers/vk-menu';
 import gmMenu from '../tui/helpers/gm-menu';
 import fsMenu from '../tui/helpers/fs-menu';
 
 export default React.createClass({
   componentWillMount() {
+    this.updateMenu();
+  },
+  componentDidMount() {
+    // storage.on(RENDER_LEFT_PANE, () => {
+    //   this.updateMenu();
+    //   this.forceUpdate();
+    // });
+  },
+  updateMenu() {
     const { screen } = this.props;
-
     this.menu = _.flatten([]
       .concat(vkMenu(screen))
       .concat(gmMenu(screen))
@@ -29,6 +39,7 @@ export default React.createClass({
     this.menu[index].fn();
   },
   render() {
+    Logger.info(_.pluck(this.menu, 'name'));
     return (
       <list
         {...listStyle}

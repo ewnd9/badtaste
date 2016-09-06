@@ -13,8 +13,6 @@ import storage, {
 
 import HelpBox from '../tui/help-box';
 
-import { stylesheet as messageStyle } from '../tui/components/message';
-
 import { stylesheet as listStyle } from '../tui/components/list';
 import { stylesheet as lineStyle } from '../tui/components/line';
 
@@ -22,7 +20,9 @@ import Menu from './menu-controller';
 import Playlist from './playlist-controller';
 
 import DialogsController from './dialogs-controller';
-import ModalsController from './modals-controller';
+
+import Prompts from './prompts-controller';
+import Modals from './modals-controller';
 
 const App = React.createClass({
   componentWillMount() {
@@ -33,7 +33,7 @@ const App = React.createClass({
     const { screen } = this.props;
 
     this.dialogsController = new DialogsController(screen);
-    this.modalsController = new ModalsController(screen);
+    // this.modalsController = new ModalsController(screen);
 
     storage.on(SHOW_HELP, () => HelpBox(screen));
     storage.on(SWITCH_PANE, this.switchPanesFocus);
@@ -61,13 +61,6 @@ const App = React.createClass({
     } else {
       this.focusPane(this.playlistPane, this.menuPane);
     }
-  },
-  setMessageRef(msg) {
-    msg.display('hello world', 1, function(err) {
-      if (err) {
-        Logger.error(err);
-      }
-    });
   },
   setLeftLine(line) {
     this.menuPane.line = line;
@@ -107,7 +100,9 @@ const App = React.createClass({
 
           <line {...lineStyle} ref={this.setRightLine} left="30%+1" width="70%-3" />
 
-          <message ref={this.setMessageRef} {...messageStyle} label="{blue-fg}Info{/blue-fg}" />
+          <Prompts screen={screen} />
+          <Modals screen={screen} />
+
         </element>
       </Provider>
     );

@@ -1,15 +1,19 @@
 import blessed from 'blessed';
 
+export const style = {
+  border: 'line',
+  height: 'shrink',
+  width: 'half',
+  top: 'center',
+  left: 'center',
+  tags: true,
+  keys: true,
+  vi: true,
+  hidden: false
+};
+
 export default (screen, label) => blessed.prompt({
-	parent: screen,
-	border: 'line',
-	height: 'shrink',
-	width: 'half',
-	top: 'center',
-	left: 'center',
-	label: label,
-	tags: true,
-	keys: true,
-	vi: true,
-	hidden: false
+	label,
+  parent: screen,
+  ...style
 });

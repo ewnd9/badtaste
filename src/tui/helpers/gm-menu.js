@@ -33,12 +33,12 @@ export default () => {
     }
   ];
 
-  if (isAllAccess()) {
+  // if (isAllAccess()) {
     result.push({
       name: nameWithCount('{bold}GM{/bold} Play album', gmLinks),
       fn: () => store.dispatch(openGmLinksModal())
     });
-  }
+  // }
 
   return result;
 };

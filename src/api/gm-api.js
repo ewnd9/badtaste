@@ -5,6 +5,8 @@ import { format } from './music-actions';
 export const pm = Promise.promisifyAll(new PlayMusic());
 
 export const setCredentials = credentials => {
+  // pm._token = credentials;
+  // return Promise.resolve();
   return pm.initAsync(credentials);
 };
 
