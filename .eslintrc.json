@@ -2,13 +2,16 @@
   "parser": "babel-eslint",
   "globals": {
     "Promise": true,
-    "Logger": true
+    "Logger": true,
+    "screen": false
   },
   "env": {
     "browser": true,
     "node": true
   },
-  "plugins": [],
+  "plugins": [
+    "react"
+  ],
   "rules": {
     "arrow-parens": [
       2,
@@ -22,6 +25,9 @@
     "semi": [
       2,
       "always"
-    ]
+    ],
+    "react/jsx-no-undef": 2,
+    "react/jsx-uses-vars": 2,
+    "react/jsx-uses-react": 2
   }
 }
