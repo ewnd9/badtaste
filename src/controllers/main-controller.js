@@ -33,7 +33,6 @@ const App = React.createClass({
     const { screen } = this.props;
 
     this.dialogsController = new DialogsController(screen);
-    // this.modalsController = new ModalsController(screen);
 
     storage.on(SHOW_HELP, () => HelpBox(screen));
     storage.on(SWITCH_PANE, this.switchPanesFocus);
@@ -77,16 +76,19 @@ const App = React.createClass({
   render() {
     const { screen } = this.props;
 
-    // return (
-    //   <Provider store={store}>
-    //     <Playlist screen={screen} setRightBox={this.setRightBox} />
-    //
-    //   </Provider>
-    // );
     return (
       <Provider store={store}>
         <element>
-          <Menu screen={screen} ref={this.setLeftBox} />
+
+          <box
+            {...listStyle}
+            left={0}
+            width="30%">
+
+            <Menu screen={screen} setLeftBox={this.setLeftBox} />
+
+          </box>
+
           <line {...lineStyle} ref={this.setLeftLine} left={1} width="30%-3" />
 
           <box

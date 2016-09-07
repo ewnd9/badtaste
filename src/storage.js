@@ -29,4 +29,31 @@ storage.emit = emitter.emit.bind(emitter);
 storage.on = emitter.on.bind(emitter);
 
 import createStore from './store';
-export const store = createStore();
+export const store = createStore({
+  menu: {
+    vkLinks: storage.data.vkLinks,
+    gmLinks: storage.data.gmLinks,
+    fsLinks: storage.data.fs
+  }
+});
+
+store.subscribe(() => {
+  const { menu: { vkLinks, gmLinks, fsLinks } } = store.getState();
+
+  const newHash = JSON.stringify({ vkLinks, gmLinks, fsLinks });
+  const oldHash = JSON.stringify({
+    vkLinks: storage.data.vkLinks,
+    gmLinks: storage.data.gmLinks,
+    fsLinks: storage.data.fs
+  });
+
+  if (newHash !== oldHash) {
+    storage.data.vkLinks = vkLinks;
+    storage.data.gmLinks = gmLinks;
+    storage.data.fs = fsLinks;
+
+    storage.save();
+    Logger.info('config updated');
+  }
+
+});

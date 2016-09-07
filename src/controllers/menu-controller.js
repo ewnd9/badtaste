@@ -1,5 +1,7 @@
 import React from 'react';
-import { stylesheet as listStyle } from '../tui/components/list';
+
+import { listStylesheet } from '../tui/components/list';
+import { connect } from 'react-redux';
 
 import _ from 'lodash';
 
@@ -9,44 +11,45 @@ import vkMenu from '../tui/helpers/vk-menu';
 import gmMenu from '../tui/helpers/gm-menu';
 import fsMenu from '../tui/helpers/fs-menu';
 
-export default React.createClass({
-  componentWillMount() {
-    this.updateMenu();
-  },
-  componentDidMount() {
-    // storage.on(RENDER_LEFT_PANE, () => {
-    //   this.updateMenu();
-    //   this.forceUpdate();
-    // });
-  },
-  updateMenu() {
-    const { screen } = this.props;
-    this.menu = _.flatten([]
-      .concat(vkMenu(screen))
-      .concat(gmMenu(screen))
-      .concat(fsMenu(screen)));
-  },
+const mapStateToProps = ({ menu }) => ({ menu });
+const mapDispatchToProps = {  };
+
+const Menu = React.createClass({
   focus() {
     this.box.focus();
   },
   setLeftBox(box) {
+    const { setLeftBox } = this.props;
+
     this.box = box;
     this.box.on('select', this.onSelect);
 
     this.onSelect(null, 0);
+    setLeftBox(box);
+  },
+  getMenu() {
+    const { screen, menu: { vkLinks, gmLinks, fsLinks } } = this.props;
+
+    return _.flatten(
+      [].concat(vkMenu(screen, vkLinks))
+        .concat(gmMenu(screen, gmLinks))
+        .concat(fsMenu(screen, fsLinks))
+    );
   },
   onSelect(item, index) {
-    this.menu[index].fn();
+    const menu = this.getMenu();
+    menu[index].fn();
   },
   render() {
-    Logger.info(_.pluck(this.menu, 'name'));
+    const menu = this.getMenu();
+
     return (
       <list
-        {...listStyle}
+        {...listStylesheet}
         ref={this.setLeftBox}
-        left={0}
-        width="30%"
-        items={_.pluck(this.menu, 'name')} />
+        items={_.pluck(menu, 'name')} />
     );
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

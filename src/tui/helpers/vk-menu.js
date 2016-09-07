@@ -7,7 +7,11 @@ import {
 } from '../../actions/vk-actions';
 
 import {
-  openVkSearchModal,
+  showPrompt,
+  VK_SEARCH_PROMPT
+} from '../../actions/prompt-actions';
+
+import {
   openVkLinksModal,
   openVkUserPlaylistsModal
 } from '../../actions/modals-actions';
@@ -21,15 +25,13 @@ import storage, {
 
 export default VkMenu;
 
-function VkMenu(screen) {
+function VkMenu(screen, vkLinks) {
   if (!storage.vkHasData()) {
     return [];
   }
 
-  const openSearchModal = () => store.dispatch(openVkSearchModal());
+  const openSearchModal = () => store.dispatch(showPrompt(VK_SEARCH_PROMPT));
   storage.on(SEARCH_VK, openSearchModal);
-
-  const { vkLinks } = storage.data;
 
   return [{
     name: '{bold}VK{/bold} Profile',

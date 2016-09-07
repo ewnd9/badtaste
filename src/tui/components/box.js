@@ -1,14 +1,18 @@
 import blessed from 'blessed';
 
-export default (screen, width, height, content) => blessed.box({
-  parent: screen,
-	top: 'center',
+export const styles = {
+  top: 'center',
   left: 'center',
-  width: width,
-  height: height,
   tags: true,
-  content: content,
   border: {
     type: 'line'
   }
+};
+
+export default (screen, width, height, content) => blessed.box({
+  ...styles,
+  parent: screen,
+  width: width,
+  height: height,
+  content: content
 });

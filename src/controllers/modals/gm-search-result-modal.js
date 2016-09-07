@@ -6,25 +6,22 @@ import SelectList from '../select-list/select-list';
 
 import { resetModals } from '../../actions/modals-actions';
 import { fetchAlbum } from '../../actions/gm-actions';
+import { addGmItem } from '../../actions/menu-actions';
 
 const mapStateToProps = null;
-const mapDispatchToProps = { resetModals, fetchAlbum };
+const mapDispatchToProps = { resetModals, fetchAlbum, addGmItem };
 
 const Modal = React.createClass({
   onComplete(index) {
-    const { props: { albums }, resetModals, fetchAlbum } = this.props;
+    const { props: { albums }, resetModals, fetchAlbum, addGmItem } = this.props;
     resetModals();
 
     const labels = albums.map(entry => `${entry.album.artist} - ${entry.album.name}`);
     const albumId = albums[index].album.albumId;
 
-    storage.data.gmLinks.unshift({ // insert at the beginning
-      name: labels[index],
-      data: { albumId }
-    });
-    storage.save();
-
+    addGmItem({ name: labels[index], data: { albumId } });
     fetchAlbum(albumId);
+    
     storage.emit(RENDER_LEFT_PANE);
   },
   render() {

@@ -15,12 +15,10 @@ import {
 
 import { isAllAccess } from '../../api/gm-api';
 
-export default () => {
+export default (screen, gmLinks) => {
   if (!storage.gmHasData()) {
     return [];
   }
-
-  const { gmLinks } = storage.data;
 
   const result = [
     {

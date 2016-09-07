@@ -4,9 +4,9 @@ import storage, { RENDER_LEFT_PANE, store } from './../../storage';
 
 import { fetchPath } from '../../actions/fs-actions';
 
-export default screen => [
+export default (screen, fsLinks) => [
   {
-    name: nameWithCount('{bold}FS{/bold} Play folder', storage.data.fs),
+    name: nameWithCount('{bold}FS{/bold} Play folder', fsLinks),
     fn: () => {
       const playPath = path => store.dispatch(fetchPath(path));
       const onSelectExisting = i => playPath(storage.data.fs[i]);
@@ -21,7 +21,7 @@ export default screen => [
           });
       };
 
-      selectOrSearch(screen, storage.data.fs, onSelectExisting, onSearchNew);
+      selectOrSearch(screen, fsLinks, onSelectExisting, onSearchNew);
     }
   }
 ];

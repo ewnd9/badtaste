@@ -46,8 +46,3 @@ export const urlPrompt = (screen, urlQuestion, nameQuestion) => {
       return result;
     });
 };
-
-export const vkSearchPrompt = screen => {
-  const question = 'Enter search query';
-  return prompt(screen, label, question);
-};
